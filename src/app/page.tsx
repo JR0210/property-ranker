@@ -6,6 +6,8 @@ import Image from 'next/image'
 // https://uk.api.just-eat.io/docs#operation/restaurantsBypostcodePostcodeGet - deprecated (no new call?)
 // https://data.police.uk/docs/method/crime-street/
 // https://data.police.uk/docs/method/stops-street/
+// Get highest internet speed from rightmove page model
+
 
 export default function Home() {
   return (
