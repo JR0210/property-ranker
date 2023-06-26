@@ -7,3 +7,30 @@ export function splitPostOutcode(outcode: string): string[] {
 
   return result;
 }
+
+export function createPostcodeMap(data: any): Map<any, any> {
+  const nestedMap = new Map();
+
+  for (const parentKey in data) {
+    if (data.hasOwnProperty(parentKey)) {
+      const childObject = data[parentKey];
+      const parentMap = new Map();
+
+      for (const childKey in childObject) {
+        if (childObject.hasOwnProperty(childKey)) {
+          const childArray = childObject[childKey];
+          for (const childValue of childArray) {
+            if (!parentMap.has(childValue)) {
+              parentMap.set(childValue, []);
+            }
+            parentMap.get(childValue).push(childKey);
+          }
+        }
+      }
+
+      nestedMap.set(parentKey, parentMap);
+    }
+  }
+
+  return nestedMap;
+}
