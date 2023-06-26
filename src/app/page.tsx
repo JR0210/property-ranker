@@ -7,7 +7,7 @@ import Image from 'next/image'
 // https://data.police.uk/docs/method/crime-street/
 // https://data.police.uk/docs/method/stops-street/
 // Get highest internet speed from rightmove page model
-
+// Create hardcoded object & Map of insurance rating areas for postcodes
 
 export default function Home() {
   return (
