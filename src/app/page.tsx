@@ -1,5 +1,12 @@
 import Image from 'next/image'
 
+// TODO APIs/Endpoints to use
+// https://google.com/maps/search/WC2N+5DU
+// https://api.postcodes.io/postcodes/WC2N%205DU
+// https://uk.api.just-eat.io/docs#operation/restaurantsBypostcodePostcodeGet - deprecated (no new call?)
+// https://data.police.uk/docs/method/crime-street/
+// https://data.police.uk/docs/method/stops-street/
+
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
