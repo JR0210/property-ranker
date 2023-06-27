@@ -1,3 +1,9 @@
+export interface PostcodesInterface {
+  [key: string]: {
+    [key: string]: number[];
+  };
+}
+
 const postcodes = {
   AB: {
     A: [
