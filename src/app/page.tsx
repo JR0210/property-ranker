@@ -1,4 +1,6 @@
 import Image from 'next/image'
+import { createPostcodeMap, splitPostOutcode } from '../utils';
+import { postcodes } from '../constants';
 
 // TODO APIs/Endpoints to use
 // https://google.com/maps/search/WC2N+5DU
@@ -10,6 +12,9 @@ import Image from 'next/image'
 // Create hardcoded object & Map of insurance rating areas for postcodes
 
 export default function Home() {
+  const postcodeMap = createPostcodeMap(postcodes);
+  console.log(postcodeMap);
+  console.log(splitPostOutcode('WC2N'));
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
