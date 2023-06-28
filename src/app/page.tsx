@@ -12,9 +12,29 @@ import { postcodes } from '../constants';
 // Create hardcoded object & Map of insurance rating areas for postcodes
 
 export default function Home() {
+  // TODO: Filter second half of outcode to only include numbers
   const postcodeMap = createPostcodeMap(postcodes);
-  console.log(postcodeMap);
-  console.log(splitPostOutcode('WC2N'));
+  const splitOutcode = splitPostOutcode('BS37');
+
+  console.log(postcodeMap, 'postcodeMap')
+  console.log(splitOutcode, 'splitOutcode')
+  const outcodeArea = splitOutcode[0];
+  const outcodeDistrict = parseInt(splitOutcode[1]);
+  if (postcodeMap.has(outcodeArea)) {
+    const parentMap = postcodeMap.get(outcodeArea);
+    console.log(parentMap, 'parentMap')
+    console.log(outcodeDistrict, 'outcodeDistrict')
+    console.log(parentMap.has(outcodeDistrict), 'parentMap.has(outcodeDistrict)')
+    if (parentMap.has(outcodeDistrict)) {
+      const childKeys = parentMap.get(outcodeDistrict);
+      console.log("Child Keys:", childKeys);
+    } else {
+      console.log("No matches found for the input number.");
+    }
+  } else {
+    console.log("No matches found for the input parent object.");
+  }
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
