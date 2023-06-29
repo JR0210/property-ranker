@@ -1,14 +1,19 @@
 "use client";
 
 import { useState } from "react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faQuestionCircle } from '@fortawesome/free-regular-svg-icons'
 
 export default function PropertyAdd() {
   const [propertyUrls, setPropertyUrls] = useState<string[]>([]);
   return (
-    <div className="flex flex-col gap-4 text-center">
+    <div className="flex flex-col gap-4 text-center items-center">
       <h2 className="text-2xl bold">To add properties:</h2>
-      <div className="text-lg">
-        <kbd className="kbd">CTRL</kbd> + <kbd className="kbd">V</kbd>
+      <div className="flex items-center text-lg w-fit relative">
+        <kbd className="kbd">CTRL</kbd>&nbsp;+&nbsp;<kbd className="kbd">V</kbd>
+        <div className="mb-auto ml-2 tooltip tooltip-right" data-tip="Expects a CSV (comma separated list) of Rightmove URLs">
+          <FontAwesomeIcon icon={faQuestionCircle} className="" />
+        </div>
       </div>
       <span className="text-accent text-lg font-extrabold">OR</span>
       <div
