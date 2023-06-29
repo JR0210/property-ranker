@@ -4,7 +4,7 @@ export interface PostcodesInterface {
   };
 }
 
-export const postcodes = {
+export const postcodes: PostcodesInterface = {
   AB: {
     A: [
       10, 11, 12, 13, 14, 15, 16, 21, 22, 23, 24, 25, 30, 31, 32, 33, 34, 35,

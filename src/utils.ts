@@ -1,21 +1,11 @@
-import { PostcodesInterface } from "./constants";
+import { postcodes } from "./constants";
 
-export function splitPostOutcode(outcode: string): string[] {
-  const index = outcode.search(/\d/); // Find the index of the first digit
-  const result = [
-    outcode.substring(0, index), // Get the substring before the digit
-    outcode.substring(index), // Get the substring starting from the digit
-  ];
-
-  return result;
-}
-
-export function createPostcodeMap(data: PostcodesInterface): Map<any, any> {
+export function createPostcodeMap(): Map<any, any> {
   const nestedMap = new Map();
 
-  for (const parentKey in data) {
-    if (data.hasOwnProperty(parentKey)) {
-      const childObject = data[parentKey];
+  for (const parentKey in postcodes) {
+    if (postcodes.hasOwnProperty(parentKey)) {
+      const childObject = postcodes[parentKey];
       const parentMap = new Map();
 
       for (const childKey in childObject) {
@@ -35,4 +25,31 @@ export function createPostcodeMap(data: PostcodesInterface): Map<any, any> {
   }
 
   return nestedMap;
+}
+
+const postcodeMap = createPostcodeMap();
+
+export function splitOutcode(outcode: string): { letters: string, numeric: number } | null {
+  const outcodeMatches = outcode.match(/^([A-Za-z]+)(\d+)/);
+  if (outcodeMatches) {
+    const [, letters, numeric] = outcodeMatches;
+    return { letters, numeric: parseInt(numeric, 10) };
+  }
+
+  return null;
+}
+
+export function getPostcodeRatingArea(outcode: string): string | null {
+  const outcodeHalves = splitOutcode(outcode);
+  if (!outcodeHalves) return null;
+
+  const { letters, numeric } = outcodeHalves;
+  if (postcodeMap.has(letters)) {
+    const parentMap = postcodeMap.get(letters);
+    if (parentMap.has(numeric)) return parentMap.get(numeric);
+    
+    return 'Refer';
+  }
+
+  return null;
 }
