@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import { getPostcodeRatingArea } from "../utils";
+import { useState, useContext } from "react";
+import { getPostcodeRatingArea } from "@/utils";
 import { Roboto_Serif } from "next/font/google";
-import PropertyAdd from "../components/PropertyAdd";
+import PropertyAdd from "@/components/PropertyAdd";
+import PropertiesContext from "@/PropertiesContext";
 
 const robotoSerif = Roboto_Serif({ subsets: ["latin"] });
 // TODO APIs/Endpoints to use
@@ -17,6 +18,7 @@ const robotoSerif = Roboto_Serif({ subsets: ["latin"] });
 
 export default function Home() {
   const [propertyUrls, setPropertyUrls] = useState<string[]>([]);
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-start p-24 gap-8">
       <h1 className="text-6xl font-bold tracking-tight">
@@ -24,9 +26,11 @@ export default function Home() {
         <span className={`${robotoSerif.className} text-accent`}>home</span>
       </h1>
 
-      <div>
-        <PropertyAdd setPropertyUrls={setPropertyUrls} />
-      </div>
+      <PropertiesContext.Provider value={{ propertyUrls, setPropertyUrls }}>
+        <div>
+          <PropertyAdd />
+        </div>
+      </PropertiesContext.Provider>
     </main>
   );
 }

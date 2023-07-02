@@ -1,7 +1,15 @@
 "use client";
 
-import { createContext } from 'react';
+import { createContext } from "react";
 
-const PropertiesContext = createContext({ propertyUrls: [] });
+interface PropertiesContextType {
+  propertyUrls: string[];
+  setPropertyUrls: (propertyUrls: string[]) => void;
+}
+
+const PropertiesContext = createContext({
+  propertyUrls: [],
+  setPropertyUrls: () => {},
+} as PropertiesContextType);
 
 export default PropertiesContext;
