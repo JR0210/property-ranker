@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { useTouchscreenDetection } from "@/hooks";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestionCircle } from "@fortawesome/free-regular-svg-icons";
-import RowInput from "./RowInput";
+import AddModal from "./AddModal";
 
 interface PropertyAddProps {
   setPropertyUrls: (urls: string[]) => void;
@@ -14,6 +14,11 @@ export default function PropertyAdd({ setPropertyUrls }: PropertyAddProps) {
   const modalRef = useRef<HTMLDivElement>(null);
   const isTouchscreen = useTouchscreenDetection();
   const [modalOpen, setModalOpen] = useState<boolean>(false);
+
+  function submitPropertyModal(urls: string[]) {
+    setPropertyUrls(urls);
+    setModalOpen(false);
+  }
 
   useEffect(() => {
     document.addEventListener("paste", (e) => {
@@ -51,41 +56,7 @@ export default function PropertyAdd({ setPropertyUrls }: PropertyAddProps) {
 
   return (
     <>
-      <div className={`modal ${modalOpen && "modal-open"}`}>
-        <div className="modal-box" ref={modalRef}>
-          <button
-            className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-            onClick={() => setModalOpen(false)}
-          >
-            ✕
-          </button>
-          <h3 className="text-xl font-bold">Add Properties</h3>
-          <ul className="flex flex-col w-full py-4 px-2 gap-4">
-            <li className="flex flex-row items-center gap-2">
-              <RowInput />
-              <button className="btn btn-sm btn-circle btn-ghost">✕</button>
-            </li>
-            <li className="flex flex-row items-center gap-2">
-              <button className="btn btn-ghost text-accent">+ Add new row</button>
-            </li>
-          </ul>
-          <div className="modal-action">
-            <button
-              className="btn"
-              onClick={() => setModalOpen(false)}
-            >
-              Cancel
-            </button>
-            <button
-              className="btn btn-accent"
-              onClick={() => setModalOpen(false)}
-            >
-              Submit
-            </button>
-          </div>
-        </div>
-      </div>
-
+      <AddModal modalOpen={modalOpen} setModalOpen={setModalOpen} submit={submitPropertyModal} ref={modalRef} />
       <div className="flex flex-col gap-4 text-center items-center">
         <h2 className="text-xl bold">To add properties:</h2>
         {!isTouchscreen ? (
