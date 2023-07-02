@@ -14,12 +14,12 @@ export default function PropertyAdd() {
   useEffect(() => {
     document.addEventListener("paste", (e) => {
       const clipboardData = e.clipboardData;
-      console.log(clipboardData, 'clipboardData')
+      console.log(clipboardData, "clipboardData");
       if (!clipboardData) return;
       const pastedData = clipboardData.getData("Text");
-      console.log(pastedData, 'pastedData')
+      console.log(pastedData, "pastedData");
       const urls = pastedData.split(",");
-      console.log(urls, 'urls')
+      console.log(urls, "urls");
       // setPropertyUrls(urls);
     });
     document.addEventListener("keydown", (e) => {
@@ -28,7 +28,11 @@ export default function PropertyAdd() {
       }
     });
     document.addEventListener("mousedown", (e) => {
-      if (modalOpen && modalRef.current && !modalRef.current.contains(e.target as Node)) {
+      if (
+        modalOpen &&
+        modalRef.current &&
+        !modalRef.current.contains(e.target as Node)
+      ) {
         setModalOpen(false);
       }
     });
@@ -37,8 +41,8 @@ export default function PropertyAdd() {
       document.removeEventListener("paste", () => {});
       document.removeEventListener("keydown", () => {});
       document.removeEventListener("mousedown", () => {});
-    }
-  }, [modalOpen, modalRef])
+    };
+  }, [modalOpen, modalRef]);
 
   return (
     <>
@@ -51,9 +55,32 @@ export default function PropertyAdd() {
             ✕
           </button>
           <h3 className="text-xl font-bold">Add Properties</h3>
-          <p className="py-4">This modal works with a hidden checkbox!</p>
+          <ul className="flex flex-col w-full py-4 px-2 gap-4">
+            <li className="flex flex-row items-center gap-2">
+              <input
+                type="text"
+                className="input input-bordered input-accent w-full"
+                placeholder="Rightmove URL"
+              />
+              <button className="btn btn-sm btn-circle btn-ghost">✕</button>
+            </li>
+            <li className="flex flex-row items-center gap-2">
+              <button className="btn btn-ghost text-accent">+ Add new row</button>
+            </li>
+          </ul>
           <div className="modal-action">
-            <button className="btn" onClick={() => setModalOpen(false)}>Close</button>
+            <button
+              className="btn"
+              onClick={() => setModalOpen(false)}
+            >
+              Cancel
+            </button>
+            <button
+              className="btn btn-accent"
+              onClick={() => setModalOpen(false)}
+            >
+              Submit
+            </button>
           </div>
         </div>
       </div>
