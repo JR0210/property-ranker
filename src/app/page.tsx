@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { getPostcodeRatingArea } from "../utils";
 import { Roboto_Serif } from "next/font/google";
-import PropertyAdd from "./components/PropertyAdd";
+import PropertyAdd from "../components/PropertyAdd";
 
 const robotoSerif = Roboto_Serif({ subsets: ["latin"] });
 // TODO APIs/Endpoints to use
