@@ -1,5 +1,8 @@
-import { forwardRef } from "react";
+"use client";
+
+import { forwardRef, useEffect, useState, useContext } from "react";
 import RowInput from "./RowInput";
+import PropertiesContext from "../PropertiesContext";
 
 interface AddModalProps {
   modalOpen: boolean;
@@ -7,10 +10,31 @@ interface AddModalProps {
   submit: (urls: string[]) => void;
 }
 
+interface InputRow {
+  value: string;
+  touched: boolean;
+  valid: boolean;
+}
+
 export default forwardRef<HTMLDivElement, AddModalProps>(function AddModal(
   { modalOpen, setModalOpen, submit }: AddModalProps,
   ref
 ) {
+  const { propertyUrls, setPropertyUrls } = useContext(PropertiesContext);
+  const [inputValues, setInputValues] = useState<InputRow[]>([]);
+
+  useEffect(() => {
+    if (modalOpen && propertyUrls.length && !inputValues.length) {
+      setInputValues(
+        propertyUrls.map((url) => ({ value: url, touched: false, valid: true }))
+      );
+    }
+
+    return () => {
+      setInputValues([]);
+    };
+  }, [modalOpen, propertyUrls, inputValues]);
+
   return (
     <div className={`modal ${modalOpen && "modal-open"}`}>
       <div className="modal-box" ref={ref}>
