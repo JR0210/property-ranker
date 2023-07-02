@@ -5,10 +5,13 @@ import { useTouchscreenDetection } from "@/hooks";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestionCircle } from "@fortawesome/free-regular-svg-icons";
 
-export default function PropertyAdd() {
+interface PropertyAddProps {
+  setPropertyUrls: (urls: string[]) => void;
+}
+
+export default function PropertyAdd({ setPropertyUrls }: PropertyAddProps) {
   const modalRef = useRef<HTMLDivElement>(null);
   const isTouchscreen = useTouchscreenDetection();
-  const [propertyUrls, setPropertyUrls] = useState<string[]>([]);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
