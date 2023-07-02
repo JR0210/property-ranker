@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { useTouchscreenDetection } from "@/hooks";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestionCircle } from "@fortawesome/free-regular-svg-icons";
+import RowInput from "./RowInput";
 
 interface PropertyAddProps {
   setPropertyUrls: (urls: string[]) => void;
@@ -16,6 +17,7 @@ export default function PropertyAdd({ setPropertyUrls }: PropertyAddProps) {
 
   useEffect(() => {
     document.addEventListener("paste", (e) => {
+      if (modalOpen) return;
       const clipboardData = e.clipboardData;
       console.log(clipboardData, "clipboardData");
       if (!clipboardData) return;
@@ -60,11 +62,7 @@ export default function PropertyAdd({ setPropertyUrls }: PropertyAddProps) {
           <h3 className="text-xl font-bold">Add Properties</h3>
           <ul className="flex flex-col w-full py-4 px-2 gap-4">
             <li className="flex flex-row items-center gap-2">
-              <input
-                type="text"
-                className="input input-bordered input-accent w-full"
-                placeholder="Rightmove URL"
-              />
+              <RowInput />
               <button className="btn btn-sm btn-circle btn-ghost">✕</button>
             </li>
             <li className="flex flex-row items-center gap-2">
