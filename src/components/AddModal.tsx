@@ -30,7 +30,7 @@ export default forwardRef<HTMLDivElement, AddModalProps>(function AddModal(
   { modalOpen, setModalOpen, submit }: AddModalProps,
   ref
 ) {
-  const { propertyUrls, setPropertyUrls } = useContext(PropertiesContext);
+  const { propertyUrls } = useContext(PropertiesContext);
   const [inputValues, setInputValues] = useState<InputRow[]>([
     { value: "", touched: false, valid: true },
   ]);
@@ -60,12 +60,23 @@ export default forwardRef<HTMLDivElement, AddModalProps>(function AddModal(
     setInputValues(inputValues.filter((_, i) => i !== index));
   }
 
+  function handleCancel() {
+    setInputValues([{ value: "", touched: false, valid: true }]);
+    setModalOpen(false);
+  }
+
+  function handleSubmit() {
+    const validUrls = inputValues.filter((input) => input.value && input.valid).map((input) => input.value);
+    setInputValues([{ value: "", touched: false, valid: true }]);
+    submit(validUrls);
+  }
+
   return (
     <div className={`modal ${modalOpen && "modal-open"}`}>
       <div className="modal-box" ref={ref}>
         <button
           className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-          onClick={() => setModalOpen(false)}
+          onClick={handleCancel}
         >
           ✕
         </button>
@@ -84,12 +95,13 @@ export default forwardRef<HTMLDivElement, AddModalProps>(function AddModal(
           </li>
         </ul>
         <div className="modal-action">
-          <button className="btn" onClick={() => setModalOpen(false)}>
+          <button className="btn" onClick={handleCancel}>
             Cancel
           </button>
           <button
             className="btn btn-accent"
-            onClick={() => setModalOpen(false)}
+            disabled={inputValues.some((input) => !input.valid)}
+            onClick={handleSubmit}
           >
             Submit
           </button>
