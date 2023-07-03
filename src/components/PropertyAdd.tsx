@@ -1,16 +1,15 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useContext } from "react";
 import { useTouchscreenDetection } from "@/hooks";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestionCircle } from "@fortawesome/free-regular-svg-icons";
+
 import AddModal from "./AddModal";
+import PropertiesContext from "../PropertiesContext";
 
-interface PropertyAddProps {
-  setPropertyUrls: (urls: string[]) => void;
-}
-
-export default function PropertyAdd({ setPropertyUrls }: PropertyAddProps) {
+export default function PropertyAdd() {
+  const { setPropertyUrls } = useContext(PropertiesContext);
   const modalRef = useRef<HTMLDivElement>(null);
   const isTouchscreen = useTouchscreenDetection();
   const [modalOpen, setModalOpen] = useState<boolean>(false);
@@ -57,11 +56,13 @@ export default function PropertyAdd({ setPropertyUrls }: PropertyAddProps) {
   return (
     <>
       <AddModal modalOpen={modalOpen} setModalOpen={setModalOpen} submit={submitPropertyModal} ref={modalRef} />
+
       <div className="flex flex-col gap-4 text-center items-center">
         <h2 className="text-xl bold">To add properties:</h2>
         {!isTouchscreen ? (
           <div className="flex items-center text-lg w-fit relative">
-            <kbd className="kbd w-16">CTRL</kbd>&nbsp;+&nbsp;
+            <kbd className="kbd w-16">CTRL</kbd>
+            &nbsp;+&nbsp;
             <kbd className="kbd w-16">V</kbd>
             <div
               className="mb-auto ml-2 tooltip tooltip-right absolute -right-6 top-0"
@@ -78,7 +79,7 @@ export default function PropertyAdd({ setPropertyUrls }: PropertyAddProps) {
                 className="mb-auto ml-2 tooltip tooltip-bottom absolute -right-6 top-0"
                 data-tip="Expects a CSV (comma separated list) of Rightmove URLs"
               >
-                <FontAwesomeIcon icon={faQuestionCircle} color="" />
+                <FontAwesomeIcon icon={faQuestionCircle} />
               </div>
             </div>
           </div>
