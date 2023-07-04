@@ -3,6 +3,7 @@
 import { forwardRef, useEffect, useState, useContext } from "react";
 import RowInput from "./RowInput";
 import PropertiesContext from "../PropertiesContext";
+import { validateUrl } from "@/utils";
 
 interface AddModalProps {
   modalOpen: boolean;
@@ -14,16 +15,6 @@ interface InputRow {
   value: string;
   touched: boolean;
   valid: boolean;
-}
-
-function validateUrl(value: string) {
-  try {
-    const url = new URL(value);
-    console.log(url, "url");
-    return url.hostname.includes("rightmove.co.uk");
-  } catch (_) {
-    return false;
-  }
 }
 
 export default forwardRef<HTMLDivElement, AddModalProps>(function AddModal(
