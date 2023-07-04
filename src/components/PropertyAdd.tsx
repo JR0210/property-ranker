@@ -7,6 +7,7 @@ import { faQuestionCircle } from "@fortawesome/free-regular-svg-icons";
 
 import AddModal from "./AddModal";
 import PropertiesContext from "../PropertiesContext";
+import { validateUrl } from "@/utils";
 
 export default function PropertyAdd() {
   const { setPropertyUrls } = useContext(PropertiesContext);
@@ -20,22 +21,46 @@ export default function PropertyAdd() {
   }
 
   useEffect(() => {
-    document.addEventListener("paste", (e) => {
-      if (modalOpen) return;
+    function handlePaste(e: ClipboardEvent) {
+      const parentEl = modalRef.current?.parentElement;
+      if (parentEl && parentEl.className.includes("modal-open")) return;
+
       const clipboardData = e.clipboardData;
-      console.log(clipboardData, "clipboardData");
       if (!clipboardData) return;
+
       const pastedData = clipboardData.getData("Text");
-      console.log(pastedData, "pastedData");
-      const urls = pastedData.split(",");
+      const items = pastedData.split(",");
+
+      let urls = [];
+      let error: string | null = null;
+      for (let i = 0; i < items.length; i++) {
+        if (!validateUrl(items[i])) {
+          error = "Pasted data includes invalid URLs";
+          break;
+        }
+        urls[i] = items[i].trim();
+      }
+
       console.log(urls, "urls");
-      // setPropertyUrls(urls);
-    });
+      if (urls.length > 10) error = "Pasted data includes too many URLs";
+      if (urls.length === 0) error = "Pasted data includes no URLs";
+
+      if (error) {
+        console.log(error, urls);
+        return;
+      }
+
+      setPropertyUrls(urls);
+    }
+
+    document.addEventListener("paste", handlePaste);
+
     document.addEventListener("keydown", (e) => {
       if (modalOpen && e.key === "Escape") {
         setModalOpen(false);
       }
     });
+
     document.addEventListener("mousedown", (e) => {
       if (
         modalOpen &&
@@ -47,15 +72,20 @@ export default function PropertyAdd() {
     });
 
     return () => {
-      document.removeEventListener("paste", () => {});
+      document.removeEventListener("paste", handlePaste);
       document.removeEventListener("keydown", () => {});
       document.removeEventListener("mousedown", () => {});
     };
-  }, [modalOpen, modalRef]);
+  }, [modalOpen, modalRef, setPropertyUrls]);
 
   return (
     <>
-      <AddModal modalOpen={modalOpen} setModalOpen={setModalOpen} submit={submitPropertyModal} ref={modalRef} />
+      <AddModal
+        modalOpen={modalOpen}
+        setModalOpen={setModalOpen}
+        submit={submitPropertyModal}
+        ref={modalRef}
+      />
 
       <div className="flex flex-col gap-4 text-center items-center">
         <h2 className="text-xl bold">To add properties:</h2>
