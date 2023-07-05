@@ -68,7 +68,7 @@ export async function POST(request: Request): Promise<Response> {
       livingCosts,
     } = propertyData;
 
-    const finalPropertyDetails = {
+    const rightMoveDetails = {
       address: {
         road: address.displayAddress,
         postcode: { outcode: address.outcode, incode: address.incode },
@@ -90,6 +90,16 @@ export async function POST(request: Request): Promise<Response> {
       },
       listingUpdate: listingHistory?.listingUpdateReason,
       councilTax: livingCosts?.councilTaxBand,
+    };
+
+    const justeatRes = await fetch(
+      `https://uk.api.just-eat.io/restaurants/bypostcode/${address.outcode}${address.incode}`
+    );
+    const justeatRestaurants = await justeatRes.json();
+    
+    const finalPropertyDetails = {
+      property: rightMoveDetails,
+      restaurants: justeatRestaurants,
     };
 
     // Return a success response
