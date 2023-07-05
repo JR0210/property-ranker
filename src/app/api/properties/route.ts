@@ -103,10 +103,16 @@ export async function POST(request: Request): Promise<Response> {
     );
     const crimeData = await crimeRes.json();
     
+    const stopSearchRes = await fetch(
+      `https://data.police.uk/api/stops-street?lat=${location.latitude}&lng=${location.longitude}`
+    );
+    const stopSearchData = await stopSearchRes.json();
+
     const finalPropertyDetails = {
       property: rightMoveDetails,
       restaurants: justeatRestaurants,
       crime: crimeData,
+      stopSearch: stopSearchData,
     };
 
     // Return a success response
