@@ -77,6 +77,7 @@ export async function POST(request: Request): Promise<Response> {
           longitude: location.longitude,
         },
         deliveryPointId: address.deliveryPointId,
+        mapsLocation: `https://google.com/maps/search/${address.outcode}+${address.incode}`
       },
       displayImage: images[0]?.src,
       broadband: `https://www.broadbandchoices.co.uk/packages/new-grid/default?location=${address.outcode}+${address.incode}#/?sortBy=Speed`,
@@ -96,10 +97,16 @@ export async function POST(request: Request): Promise<Response> {
       `https://uk.api.just-eat.io/restaurants/bypostcode/${address.outcode}${address.incode}`
     );
     const justeatRestaurants = await justeatRes.json();
+
+    const crimeRes = await fetch(
+      `https://data.police.uk/api/crimes-street/all-crime?lat=${location.latitude}&lng=${location.longitude}`
+    );
+    const crimeData = await crimeRes.json();
     
     const finalPropertyDetails = {
       property: rightMoveDetails,
       restaurants: justeatRestaurants,
+      crime: crimeData,
     };
 
     // Return a success response
