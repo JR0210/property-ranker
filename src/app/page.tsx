@@ -17,6 +17,7 @@ const robotoSerif = Roboto_Serif({ subsets: ["latin"] });
 
 export default function Home() {
   const [propertyUrls, setPropertyUrls] = useState<string[]>([]);
+  const [propertyData, setPropertyData] = useState<any>([]);
 
   useEffect(() => {
     console.log(propertyUrls, 'propertyUrls')
@@ -31,9 +32,13 @@ export default function Home() {
         console.log(res, 'res')
         const data = await res.json();
         console.log(data, 'data')
+        return data;
     }
 
-    if (propertyUrls.length > 0) makeCall();
+    if (propertyUrls.length > 0) {
+      const propertiesRes = makeCall();
+      setPropertyData(propertiesRes);
+    }
   }, [propertyUrls])
 
   return (
