@@ -79,7 +79,7 @@ export async function POST(request: Request): Promise<Response> {
         deliveryPointId: address.deliveryPointId,
         mapsLocation: `https://google.com/maps/search/${address.outcode}+${address.incode}`
       },
-      displayImage: images[0]?.src,
+      displayImage: images[0]?.url,
       broadband: `https://www.broadbandchoices.co.uk/packages/new-grid/default?location=${address.outcode}+${address.incode}#/?sortBy=Speed`,
       propertyInfo: {
         propertyType: propertySubType,
