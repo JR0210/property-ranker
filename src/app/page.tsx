@@ -5,6 +5,7 @@ import { getPostcodeRatingArea } from "@/utils";
 import { Roboto_Serif } from "next/font/google";
 import PropertyAdd from "@/components/PropertyAdd";
 import PropertiesContext from "@/PropertiesContext";
+import PropertyCard from "@/components/PropertyCard";
 
 const robotoSerif = Roboto_Serif({ subsets: ["latin"] });
 // // https://google.com/maps/search/WC2N+5DU
@@ -20,26 +21,24 @@ export default function Home() {
   const [propertyData, setPropertyData] = useState<any>([]);
 
   useEffect(() => {
-    console.log(propertyUrls, 'propertyUrls')
+    console.log(propertyUrls, "propertyUrls");
     async function makeCall() {
       const res = await fetch("/api/properties", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ url: propertyUrls[0] }),
-        });
-        console.log(res, 'res')
-        const data = await res.json();
-        console.log(data, 'data')
-        return data;
+        },
+        body: JSON.stringify({ url: propertyUrls[0] }),
+      });
+      console.log(res, "res");
+      const data = await res.json();
+      console.log(data, "data");
+      setPropertyData([data.data]);
+      return [data];
     }
 
-    if (propertyUrls.length > 0) {
-      const propertiesRes = makeCall();
-      setPropertyData(propertiesRes);
-    }
-  }, [propertyUrls])
+    if (propertyUrls.length > 0) makeCall();
+  }, [propertyUrls]);
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-start p-24 gap-8">
@@ -52,6 +51,13 @@ export default function Home() {
         <div>
           <PropertyAdd />
         </div>
+        {propertyData.length > 0 && (
+          <div className="grid grid-cols-3 gap-4">
+            {propertyData.map((property: any, index: number) => (
+              <PropertyCard key={index} propertyData={property} />
+            ))}
+          </div>
+        )}
       </PropertiesContext.Provider>
     </main>
   );
