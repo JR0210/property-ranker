@@ -63,7 +63,7 @@ export default function Home() {
         {propertyData.length > 0 && (
           <div className="grid grid-cols-3 gap-4">
             {propertyData.map((property: any, index: number) => (
-              <PropertyCard key={index} propertyData={property} skeleton />
+              <PropertyCard key={index} propertyData={property} />
             ))}
           </div>
         )}
