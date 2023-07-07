@@ -2,8 +2,8 @@ import Image from "next/image";
 import Skeleton from "./Skeleton";
 
 export default function PropertyCard({ propertyData, skeleton }: any) {
-  const { property = {} } = propertyData;
-  const { displayImage = "", address = {} } = property;
+  const { property = {}, crime = [], stopSearch = [], restaurants = {} } = propertyData;
+  const { displayImage = "", address = {}, propertyInfo = {} } = property;
 
   const renderBody = () => {
     if (skeleton) {
@@ -18,14 +18,17 @@ export default function PropertyCard({ propertyData, skeleton }: any) {
 
     return (
       <>
-        <h2 className="card-title">Property</h2>
-        <p>Property Description</p>
+        <h2 className="card-title">{address.road}, {address.postcode?.outcode} {address.postcode?.incode}</h2>
+        <h3 className="card-title">{propertyInfo.price}</h3>
+        <span>No. of crimes in area: {crime.length}</span>
+        <span>No. of stop & search in area: {stopSearch.length}</span>
+        <span>No. of delivery restaurants: {(restaurants.Restaurants || []).length}</span>
       </>
     );
   };
 
   return (
-    <div className="card w-96 shadow-xl">
+    <div className="card w-96 shadow-xl bg-base-300">
       <figure className="flex flex-center bg-base-200 h-72 relative text-">
         {skeleton ? (
           <div className="loading loading-lg"></div>
