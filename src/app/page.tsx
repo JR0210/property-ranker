@@ -1,20 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getPostcodeRatingArea } from "@/utils";
 import { Roboto_Serif } from "next/font/google";
 import PropertyAdd from "@/components/PropertyAdd";
 import PropertiesContext from "@/PropertiesContext";
 import PropertyCard from "@/components/PropertyCard";
 
 const robotoSerif = Roboto_Serif({ subsets: ["latin"] });
-// // https://google.com/maps/search/WC2N+5DU
-// // https://uk.api.just-eat.io/docs#operation/restaurantsBypostcodePostcodeGet - deprecated (no new call?)
-// // https://data.police.uk/docs/method/crime-street/
-// // https://data.police.uk/docs/method/stops-street/
-// // Get highest internet speed from rightmove page model -- ISSUE: Hits captcha
-// // ^ Maybe use https://www.broadbandchoices.co.uk/packages/new-grid/default?location={outcode}+{incode}#/?sortBy=Speed and add button to card
-// // Create hardcoded object & Map of insurance rating areas for postcodes
 
 export default function Home() {
   const [propertyUrls, setPropertyUrls] = useState<string[]>([]);
