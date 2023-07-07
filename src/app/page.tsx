@@ -18,10 +18,10 @@ const robotoSerif = Roboto_Serif({ subsets: ["latin"] });
 
 export default function Home() {
   const [propertyUrls, setPropertyUrls] = useState<string[]>([]);
-  const [propertyData, setPropertyData] = useState<any>([]);
+  const [propertyData, setPropertyData] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    console.log(propertyUrls, "propertyUrls");
     async function makeCall() {
       const res = await fetch("/api/properties", {
         method: "POST",
@@ -32,12 +32,16 @@ export default function Home() {
       });
       console.log(res, "res");
       const data = await res.json();
-      console.log(data, "data");
+      console.log(data.data, "data");
       setPropertyData([data.data]);
+      setLoading(false);
       return [data];
     }
 
-    if (propertyUrls.length > 0) makeCall();
+    if (propertyUrls.length > 0) {
+      setLoading(true);
+      makeCall();
+    }
   }, [propertyUrls]);
 
   return (
@@ -51,10 +55,15 @@ export default function Home() {
         <div>
           <PropertyAdd />
         </div>
+        {loading && (
+          <div className="flex items-center justify-center">
+            <span className="loading loading-spinner loading-lg"></span>
+          </div>
+        )}
         {propertyData.length > 0 && (
           <div className="grid grid-cols-3 gap-4">
             {propertyData.map((property: any, index: number) => (
-              <PropertyCard key={index} propertyData={property} />
+              <PropertyCard key={index} propertyData={property} skeleton />
             ))}
           </div>
         )}
