@@ -14,25 +14,40 @@ export default function Home() {
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    async function makeCall() {
+    async function makeAPICall(url: string) {
       const res = await fetch("/api/properties", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ url: propertyUrls[0] }),
+        body: JSON.stringify({ url }),
       });
-      console.log(res, "res");
-      const data = await res.json();
-      console.log(data.data, "data");
-      setPropertyData([data.data]);
+      const jsonRes = await res.json();
+      return jsonRes.data;
+    }
+
+    async function fetchData() {
+      setLoading(true);
+
+      for (let i = 0; i < propertyUrls.length; i++) {
+        const data = await makeAPICall(propertyUrls[i]);
+        setPropertyData(prevData => {
+          const newData = [...prevData];
+          const dataIndex = newData.findIndex(item => item.url === data.url);
+          if (dataIndex !== -1) {
+            newData[dataIndex] = data;
+          }
+          return newData;
+        });
+        await new Promise(resolve => setTimeout(resolve, 2000)); // Wait for 2 seconds
+      }
+
       setLoading(false);
-      return [data];
     }
 
     if (propertyUrls.length > 0) {
-      setLoading(true);
-      makeCall();
+      setPropertyData(propertyUrls.map(url => ({ url, loading: true })));
+      fetchData();
     }
   }, [propertyUrls]);
 
@@ -45,17 +60,13 @@ export default function Home() {
 
       <PropertiesContext.Provider value={{ propertyUrls, setPropertyUrls }}>
         <div>
-          <PropertyAdd />
+          <PropertyAdd loading={loading} />
         </div>
-        {loading && (
-          <div className="flex items-center justify-center">
-            <span className="loading loading-spinner loading-lg"></span>
-          </div>
-        )}
+
         {propertyData.length > 0 && (
-          <div className="grid grid-cols-3 gap-4">
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {propertyData.map((property: any, index: number) => (
-              <PropertyCard key={index} propertyData={property} />
+              <PropertyCard key={index} propertyData={property} skeleton={property.loading} />
             ))}
           </div>
         )}
