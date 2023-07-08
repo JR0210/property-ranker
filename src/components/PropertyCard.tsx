@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Skeleton from "./Skeleton";
-import { getPostcodeRatingArea } from "@/utils";
+import { getPostcodeRatingArea, removePostcode } from "@/utils";
 
 export default function PropertyCard({ propertyData, skeleton }: any) {
   const {
@@ -26,7 +26,7 @@ export default function PropertyCard({ propertyData, skeleton }: any) {
     return (
       <>
         <h2 className="card-title">
-          {address.road}, {address.postcode?.outcode} {address.postcode?.incode}
+          {removePostcode(address.road)}, {address.postcode?.outcode} {address.postcode?.incode}
         </h2>
         <h3 className="card-title">{propertyInfo.price}</h3>
         <div className="flex flex-col gap-2">
@@ -45,19 +45,19 @@ export default function PropertyCard({ propertyData, skeleton }: any) {
             No. of delivery restaurants:{" "}
             <b>{(restaurants.Restaurants || []).length}</b>
           </span>
-          <a className="btn-link" href={property.broadband} target="_blank">View broadband options</a>
+          <a className="w-fit text-accent hover:text-accent-focus" href={property.broadband} target="_blank">View broadband options</a>
         </div>
       </>
     );
   };
 
   return (
-    <div className="card w-full shadow-xl bg-base-300">
-      <figure className="flex flex-center bg-base-200 h-72 relative text-">
+    <div className="card w-full shadow-xl bg-base-300 border border-neutral-content dark:border-neutral">
+      <figure className="flex flex-center bg-base-200 h-80 relative">
         {skeleton ? (
           <div className="loading loading-lg"></div>
         ) : (
-          <Image src={displayImage} alt={address.road} fill />
+          <Image src={displayImage} alt={address.road} style={{objectFit: "cover"}} fill />
         )}
       </figure>
       <div className="card-body">
