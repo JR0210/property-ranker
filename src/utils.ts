@@ -40,6 +40,7 @@ export function splitOutcode(outcode: string): { letters: string, numeric: numbe
 }
 
 export function getPostcodeRatingArea(outcode: string): string | null {
+  if (!outcode) return null;
   const outcodeHalves = splitOutcode(outcode);
   if (!outcodeHalves) return null;
 
@@ -62,4 +63,10 @@ export function validateUrl(value: string) {
   } catch (_) {
     return false;
   }
+}
+
+export function removePostcode(str: string): string {
+  const pattern = /,\s*[A-Z]{1,2}\d{1,2}(?:\s*\d\w{2})?/;
+  const result = str.replace(pattern, '');
+  return result.trim();
 }
