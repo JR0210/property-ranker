@@ -62,8 +62,8 @@ export default function PropertyCard({ propertyData, skeleton }: any) {
       </figure>
       <div className="card-body">
         {renderBody()}
-        <div className="card-actions justify-end">
-          <button className="btn btn-accent mt-4" disabled={skeleton}>
+        <div className="card-actions justify-end mt-auto">
+          <button className="btn btn-accent" disabled={skeleton}>
             {skeleton ? (
               <span className="loading loading-spinner"></span>
             ) : (
