@@ -9,7 +9,7 @@ import AddModal from "./AddModal";
 import PropertiesContext from "../PropertiesContext";
 import { validateUrl } from "@/utils";
 
-export default function PropertyAdd() {
+export default function PropertyAdd({ loading }: { loading: boolean}) {
   const { setPropertyUrls } = useContext(PropertiesContext);
   const modalRef = useRef<HTMLDivElement>(null);
   const isTouchscreen = useTouchscreenDetection();
@@ -23,13 +23,13 @@ export default function PropertyAdd() {
   useEffect(() => {
     function handlePaste(e: ClipboardEvent) {
       const parentEl = modalRef.current?.parentElement;
-      if (parentEl && parentEl.className.includes("modal-open")) return;
+      if (parentEl && parentEl.className.includes("modal-open") || loading) return;
 
       const clipboardData = e.clipboardData;
       if (!clipboardData) return;
 
       const pastedData = clipboardData.getData("Text");
-      const items = pastedData.split(",");
+      const items = pastedData.split("\n").filter((item) => item !== "");
 
       let urls = [];
       let error: string | null = null;
@@ -41,7 +41,6 @@ export default function PropertyAdd() {
         urls[i] = items[i].trim();
       }
 
-      console.log(urls, "urls");
       if (urls.length > 10) error = "Pasted data includes too many URLs";
       if (urls.length === 0) error = "Pasted data includes no URLs";
 
@@ -76,7 +75,7 @@ export default function PropertyAdd() {
       document.removeEventListener("keydown", () => {});
       document.removeEventListener("mousedown", () => {});
     };
-  }, [modalOpen, modalRef, setPropertyUrls]);
+  }, [modalOpen, modalRef, setPropertyUrls, loading]);
 
   return (
     <>
@@ -122,6 +121,7 @@ export default function PropertyAdd() {
           <button
             className="btn text-lg font-medium"
             onClick={() => setModalOpen(true)}
+            disabled={loading}
           >
             Add Property Links
           </button>

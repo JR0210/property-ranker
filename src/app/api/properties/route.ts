@@ -109,6 +109,7 @@ export async function POST(request: Request): Promise<Response> {
     const stopSearchData = await stopSearchRes.json();
 
     const finalPropertyDetails = {
+      url,
       property: rightMoveDetails,
       restaurants: justeatRestaurants,
       crime: crimeData,
