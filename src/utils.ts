@@ -1,4 +1,5 @@
 import { postcodes } from "./constants";
+import DetachedIcon from "./icons/Detached";
 
 export function createPostcodeMap(): Map<any, any> {
   const nestedMap = new Map();
@@ -69,4 +70,13 @@ export function removePostcode(str: string): string {
   const pattern = /,\s*[A-Z]{1,2}\d{1,2}(?:\s*\d\w{2})?/;
   const result = str.replace(pattern, '');
   return result.trim();
+}
+
+export function getPropertyTypeIcon(type: string): any {
+  switch (type) {
+    case 'Detached':
+      return DetachedIcon;
+    default:
+      return null;
+  }
 }
