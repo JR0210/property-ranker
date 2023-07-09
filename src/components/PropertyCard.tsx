@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Skeleton from "./Skeleton";
-import { getPostcodeRatingArea, removePostcode } from "@/utils";
+import { getPostcodeRatingArea, removePostcode, getPropertyTypeIcon } from "@/utils";
 
 export default function PropertyCard({ propertyData, skeleton }: any) {
   const {
@@ -11,6 +11,7 @@ export default function PropertyCard({ propertyData, skeleton }: any) {
   } = propertyData;
   const { displayImage = "", address = {}, propertyInfo = {} } = property;
   const ratingArea = getPostcodeRatingArea(address.postcode?.outcode);
+  const PropertyIcon = getPropertyTypeIcon(propertyInfo.propertyType);
 
   const renderBody = () => {
     if (skeleton) {
@@ -25,6 +26,7 @@ export default function PropertyCard({ propertyData, skeleton }: any) {
 
     return (
       <>
+        {PropertyIcon && <PropertyIcon fill="fill-neutral dark:fill-neutral-content" size={32} />}
         <h2 className="card-title">
           {removePostcode(address.road)}, {address.postcode?.outcode} {address.postcode?.incode}
         </h2>
@@ -60,7 +62,7 @@ export default function PropertyCard({ propertyData, skeleton }: any) {
           <Image src={displayImage} alt={address.road} style={{objectFit: "cover"}} fill />
         )}
       </figure>
-      <div className="card-body">
+      <div className="card-body pt-4">
         {renderBody()}
         <div className="card-actions justify-end mt-auto">
           <button className="btn btn-accent" disabled={skeleton}>
