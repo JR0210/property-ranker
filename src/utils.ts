@@ -1,5 +1,6 @@
 import { postcodes } from "./constants";
 import DetachedIcon from "./icons/Detached";
+import SemidetachedIcon from "./icons/Semidetached";
 
 export function createPostcodeMap(): Map<any, any> {
   const nestedMap = new Map();
@@ -76,6 +77,8 @@ export function getPropertyTypeIcon(type: string): any {
   switch (type) {
     case 'Detached':
       return DetachedIcon;
+    case 'Semi-Detached':
+      return SemidetachedIcon;
     default:
       return null;
   }
