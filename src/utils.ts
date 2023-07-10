@@ -1,4 +1,5 @@
 import { postcodes } from "./constants";
+import BungalowIcon from "./icons/Bungalow";
 import DetachedIcon from "./icons/Detached";
 import SemidetachedIcon from "./icons/Semidetached";
 import TerracedIcon from "./icons/Terraced";
@@ -32,7 +33,9 @@ export function createPostcodeMap(): Map<any, any> {
 
 const postcodeMap = createPostcodeMap();
 
-export function splitOutcode(outcode: string): { letters: string, numeric: number } | null {
+export function splitOutcode(
+  outcode: string
+): { letters: string; numeric: number } | null {
   const outcodeMatches = outcode.match(/^([A-Za-z]+)(\d+)/);
   if (outcodeMatches) {
     const [, letters, numeric] = outcodeMatches;
@@ -51,8 +54,8 @@ export function getPostcodeRatingArea(outcode: string): string | null {
   if (postcodeMap.has(letters)) {
     const parentMap = postcodeMap.get(letters);
     if (parentMap.has(numeric)) return parentMap.get(numeric);
-    
-    return 'Refer';
+
+    return "Refer";
   }
 
   return null;
@@ -70,19 +73,32 @@ export function validateUrl(value: string) {
 
 export function removePostcode(str: string): string {
   const pattern = /,\s*[A-Z]{1,2}\d{1,2}(?:\s*\d\w{2})?/;
-  const result = str.replace(pattern, '');
+  const result = str.replace(pattern, "");
   return result.trim();
 }
 
+function getPossibleTypes(type: string): any {
+  const lowerCaseType = type.toLowerCase();
+  if (lowerCaseType.includes("bungalow")) return BungalowIcon;
+  if (
+    lowerCaseType.includes("terrace") ||
+    ["town house", "mews"].includes(lowerCaseType)
+  )
+    return TerracedIcon;
+  return DetachedIcon;
+}
+
 export function getPropertyTypeIcon(type: string): any {
-  switch (type) {
-    case 'Detached':
+  switch (type.toLowerCase()) {
+    case "detached":
       return DetachedIcon;
-    case 'Semi-Detached':
+    case "semi-detached":
       return SemidetachedIcon;
-    case 'Terraced':
+    case "terraced":
       return TerracedIcon;
+    case "bungalow":
+      return BungalowIcon;
     default:
-      return null;
+      return getPossibleTypes(type);
   }
 }
