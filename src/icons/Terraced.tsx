@@ -8,9 +8,9 @@ export default function TerracedIcon({
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="auto"
       height={size}
       viewBox="0 0 1088.2862 453.0447"
+      className="w-auto"
     >
       <path
         className={fill}

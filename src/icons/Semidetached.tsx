@@ -8,9 +8,9 @@ export default function SemidetachedIcon({
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="auto"
       height={size}
       viewBox="0 0 736.2048 452.9589"
+      className="w-auto"
     >
       <path
         className={fill}

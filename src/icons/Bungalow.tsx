@@ -8,9 +8,9 @@ export default function BungalowIcon({
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="auto"
       height={size}
       viewBox="0 0 384.1234 452.959"
+      className="w-auto"
     >
       <path
         className={fill}
