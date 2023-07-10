@@ -31,22 +31,22 @@ export default function Home() {
 
       for (let i = 0; i < propertyUrls.length; i++) {
         const data = await makeAPICall(propertyUrls[i]);
-        setPropertyData(prevData => {
+        setPropertyData((prevData) => {
           const newData = [...prevData];
-          const dataIndex = newData.findIndex(item => item.url === data.url);
+          const dataIndex = newData.findIndex((item) => item.url === data.url);
           if (dataIndex !== -1) {
             newData[dataIndex] = data;
           }
           return newData;
         });
-        await new Promise(resolve => setTimeout(resolve, 2000)); // Wait for 2 seconds
+        await new Promise((resolve) => setTimeout(resolve, 2000)); // Wait for 2 seconds
       }
 
       setLoading(false);
     }
 
     if (propertyUrls.length > 0) {
-      setPropertyData(propertyUrls.map(url => ({ url, loading: true })));
+      setPropertyData(propertyUrls.map((url) => ({ url, loading: true })));
       fetchData();
     }
   }, [propertyUrls]);
@@ -66,7 +66,11 @@ export default function Home() {
         {propertyData.length > 0 && (
           <div className="w-full grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
             {propertyData.map((property: any, index: number) => (
-              <PropertyCard key={index} propertyData={property} skeleton={property.loading} />
+              <PropertyCard
+                key={index}
+                propertyData={property}
+                skeleton={property.loading}
+              />
             ))}
           </div>
         )}

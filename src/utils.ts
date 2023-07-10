@@ -64,7 +64,6 @@ export function getPostcodeRatingArea(outcode: string): string | null {
 export function validateUrl(value: string) {
   try {
     const url = new URL(value);
-    console.log(url, "url");
     return url.hostname.includes("rightmove.co.uk");
   } catch (_) {
     return false;

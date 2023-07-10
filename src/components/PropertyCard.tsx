@@ -1,6 +1,10 @@
 import Image from "next/image";
 import Skeleton from "./Skeleton";
-import { getPostcodeRatingArea, removePostcode, getPropertyTypeIcon } from "@/utils";
+import {
+  getPostcodeRatingArea,
+  removePostcode,
+  getPropertyTypeIcon,
+} from "@/utils";
 
 export default function PropertyCard({ propertyData, skeleton }: any) {
   const {
@@ -26,9 +30,22 @@ export default function PropertyCard({ propertyData, skeleton }: any) {
 
     return (
       <>
-        {PropertyIcon && <PropertyIcon fill="fill-neutral dark:fill-neutral-content" size={32} />}
+        <div className="flex flex-row flex-start gap-2">
+          {PropertyIcon && (
+            <div
+              className="tooltip tooltip-right"
+              data-tip={propertyInfo.propertyType}
+            >
+              <PropertyIcon
+                fill="fill-neutral dark:fill-neutral-content"
+                size={32}
+              />
+            </div>
+          )}
+        </div>
         <h2 className="card-title">
-          {removePostcode(address.road)}, {address.postcode?.outcode} {address.postcode?.incode}
+          {removePostcode(address.road)}, {address.postcode?.outcode}{" "}
+          {address.postcode?.incode}
         </h2>
         <h3 className="card-title">{propertyInfo.price}</h3>
         <div className="flex flex-col gap-2">
@@ -47,7 +64,13 @@ export default function PropertyCard({ propertyData, skeleton }: any) {
             No. of delivery restaurants:{" "}
             <b>{(restaurants.Restaurants || []).length}</b>
           </span>
-          <a className="w-fit text-accent hover:text-accent-focus" href={property.broadband} target="_blank">View broadband options</a>
+          <a
+            className="w-fit text-accent hover:text-accent-focus"
+            href={property.broadband}
+            target="_blank"
+          >
+            View broadband options
+          </a>
         </div>
       </>
     );
@@ -59,19 +82,28 @@ export default function PropertyCard({ propertyData, skeleton }: any) {
         {skeleton ? (
           <div className="loading loading-lg"></div>
         ) : (
-          <Image src={displayImage} alt={address.road} style={{objectFit: "cover"}} fill />
+          <Image
+            src={displayImage}
+            alt={address.road}
+            style={{ objectFit: "cover" }}
+            fill
+          />
         )}
       </figure>
-      <div className="card-body pt-4">
+      <div className="card-body pt-6">
         {renderBody()}
         <div className="card-actions justify-end mt-auto">
-          <button className="btn btn-accent" disabled={skeleton}>
+          <a
+            className={`btn btn-accent ${
+              skeleton && "cursor-not-allowed pointer-events-none"
+            }`}
+          >
             {skeleton ? (
               <span className="loading loading-spinner"></span>
             ) : (
               "Open listing"
             )}
-          </button>
+          </a>
         </div>
       </div>
     </div>
