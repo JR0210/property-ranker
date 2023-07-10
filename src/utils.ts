@@ -88,7 +88,7 @@ function getPossibleTypes(type: string): any {
   return DetachedIcon;
 }
 
-export function getPropertyTypeIcon(type: string): any {
+export function getPropertyTypeIcon(type: string = ""): any {
   switch (type.toLowerCase()) {
     case "detached":
       return DetachedIcon;
