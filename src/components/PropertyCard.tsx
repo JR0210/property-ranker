@@ -20,6 +20,7 @@ export default function PropertyCard({ propertyData, skeleton }: any) {
     crime = [],
     stopSearch = [],
     restaurants = {},
+    url,
   } = propertyData;
   const { displayImage = "", address = {}, propertyInfo = {} } = property;
   const ratingArea = getPostcodeRatingArea(address.postcode?.outcode);
@@ -140,6 +141,8 @@ export default function PropertyCard({ propertyData, skeleton }: any) {
             className={`btn btn-accent ${
               skeleton && "btn-disabled cursor-not-allowed pointer-events-none"
             }`}
+            href={url}
+            target="_blank"
           >
             {skeleton ? (
               <span className="loading loading-spinner"></span>
