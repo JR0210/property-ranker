@@ -45,19 +45,22 @@ export default function PropertyCard({ propertyData, skeleton }: any) {
   );
 
   const renderAddressLink = () => (
-    <a
-      className={`flex flex-row justify-start items-center gap-2 ${
-        skeleton && "cursor-not-allowed pointer-events-none"
-      }`}
-      href={`https://www.google.com/maps/@${address.location?.latitude},${address.location?.longitude},17z`}
-      target="_blank"
-    >
-      <LocationPinIcon fill={iconFill} size={16} />
-      <h2 className="card-title">
-        {removePostcode(address.road)}, {address.postcode?.outcode}{" "}
-        {address.postcode?.incode}
-      </h2>
-    </a>
+    <>
+      <a
+        className={`flex flex-row justify-start items-center gap-2 transition-all duration-200 hover:opacity-80 ${
+          skeleton && "cursor-not-allowed pointer-events-none"
+        }`}
+        href={`https://www.google.com/maps/@${address.location?.latitude},${address.location?.longitude},17z`}
+        target="_blank"
+      >
+        <LocationPinIcon fill={iconFill} size={16} />
+        <h2 className="card-title">
+          {removePostcode(address.road)}, {address.postcode?.outcode}{" "}
+          {address.postcode?.incode}
+        </h2>
+      </a>
+      <h3 className="text-xl leading-5 font-semibold">{propertyInfo.price}</h3>
+    </>
   );
 
   const renderBody = () => {
@@ -75,7 +78,7 @@ export default function PropertyCard({ propertyData, skeleton }: any) {
       <>
         {renderPropertyInfoTop()}
         {renderAddressLink()}
-        <h3 className="card-title">{propertyInfo.price}</h3>
+
         <div className="flex flex-col gap-2">
           <span>
             Insurance rating area: <b>{ratingArea}</b>
