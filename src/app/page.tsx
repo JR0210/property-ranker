@@ -59,8 +59,26 @@ export default function Home() {
       </h1>
 
       <PropertiesContext.Provider value={{ propertyUrls, setPropertyUrls }}>
-        <div>
+        <div className="grid grid-cols-3 gap-32">
+          <div />
           <PropertyAdd loading={loading} />
+          <div className="flex flex-row h-fit self-end gap-4">
+            <select
+              className="select select-accent disabled:opacity-50"
+              disabled
+            >
+              <option>Price</option>
+              <option>Bedrooms</option>
+              <option>Bathrooms</option>
+            </select>
+            <select
+              className="select select-accent disabled:opacity-50"
+              disabled
+            >
+              <option>Ascending</option>
+              <option>Descending</option>
+            </select>
+          </div>
         </div>
 
         {propertyData.length > 0 && (
