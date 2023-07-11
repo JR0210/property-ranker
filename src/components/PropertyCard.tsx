@@ -23,7 +23,7 @@ export default function PropertyCard({ propertyData, skeleton }: any) {
   const PropertyIcon = getPropertyTypeIcon(propertyInfo.propertyType);
 
   const renderPropertyInfoTop = () => (
-    <div className="flex flex-row flex-start gap-4">
+    <div className="flex flex-row flex-start gap-4 mb-2">
       {PropertyIcon && (
         <div
           className="tooltip tooltip-right"
@@ -45,13 +45,19 @@ export default function PropertyCard({ propertyData, skeleton }: any) {
   );
 
   const renderAddressLink = () => (
-    <div className="flex flex-row justify-start items-center gap-2">
+    <a
+      className={`flex flex-row justify-start items-center gap-2 ${
+        skeleton && "cursor-not-allowed pointer-events-none"
+      }`}
+      href={`https://www.google.com/maps/@${address.location?.latitude},${address.location?.longitude},17z`}
+      target="_blank"
+    >
       <LocationPinIcon fill={iconFill} size={16} />
       <h2 className="card-title">
         {removePostcode(address.road)}, {address.postcode?.outcode}{" "}
         {address.postcode?.incode}
       </h2>
-    </div>
+    </a>
   );
 
   const renderBody = () => {
