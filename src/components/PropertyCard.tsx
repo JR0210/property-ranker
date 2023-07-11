@@ -47,11 +47,11 @@ export default function PropertyCard({ propertyData, skeleton }: any) {
           <div className="w-0.5 h-full bg-neutral dark:bg-neutral-content" />
           <div className="flex flex-row justify-start items-center gap-2">
             <BedroomIcon fill={iconFill} size={32} />
-            <span className="text-xl font-bold">x2</span>
+            <span className="text-xl font-bold">x{propertyInfo.bedrooms}</span>
           </div>
           <div className="flex flex-row justify-start items-center gap-2">
             <BathroomIcon fill={iconFill} size={32} />
-            <span className="text-xl font-bold">x2</span>
+            <span className="text-xl font-bold">x{propertyInfo.bathrooms}</span>
           </div>
         </div>
         <div className="flex flex-row justify-start items-center gap-2">
