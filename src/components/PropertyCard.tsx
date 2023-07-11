@@ -22,6 +22,38 @@ export default function PropertyCard({ propertyData, skeleton }: any) {
   const ratingArea = getPostcodeRatingArea(address.postcode?.outcode);
   const PropertyIcon = getPropertyTypeIcon(propertyInfo.propertyType);
 
+  const renderPropertyInfoTop = () => (
+    <div className="flex flex-row flex-start gap-4">
+      {PropertyIcon && (
+        <div
+          className="tooltip tooltip-right"
+          data-tip={propertyInfo.propertyType}
+        >
+          <PropertyIcon fill={iconFill} size={32} />
+        </div>
+      )}
+      <div className="w-0.5 h-full bg-neutral dark:bg-neutral-content" />
+      <div className="flex flex-row justify-start items-center gap-2">
+        <BedroomIcon fill={iconFill} size={32} />
+        <span className="text-xl font-bold">x{propertyInfo.bedrooms}</span>
+      </div>
+      <div className="flex flex-row justify-start items-center gap-2">
+        <BathroomIcon fill={iconFill} size={32} />
+        <span className="text-xl font-bold">x{propertyInfo.bathrooms}</span>
+      </div>
+    </div>
+  );
+
+  const renderAddressLink = () => (
+    <div className="flex flex-row justify-start items-center gap-2">
+      <LocationPinIcon fill={iconFill} size={16} />
+      <h2 className="card-title">
+        {removePostcode(address.road)}, {address.postcode?.outcode}{" "}
+        {address.postcode?.incode}
+      </h2>
+    </div>
+  );
+
   const renderBody = () => {
     if (skeleton) {
       return (
@@ -35,32 +67,8 @@ export default function PropertyCard({ propertyData, skeleton }: any) {
 
     return (
       <>
-        <div className="flex flex-row flex-start gap-4">
-          {PropertyIcon && (
-            <div
-              className="tooltip tooltip-right"
-              data-tip={propertyInfo.propertyType}
-            >
-              <PropertyIcon fill={iconFill} size={32} />
-            </div>
-          )}
-          <div className="w-0.5 h-full bg-neutral dark:bg-neutral-content" />
-          <div className="flex flex-row justify-start items-center gap-2">
-            <BedroomIcon fill={iconFill} size={32} />
-            <span className="text-xl font-bold">x{propertyInfo.bedrooms}</span>
-          </div>
-          <div className="flex flex-row justify-start items-center gap-2">
-            <BathroomIcon fill={iconFill} size={32} />
-            <span className="text-xl font-bold">x{propertyInfo.bathrooms}</span>
-          </div>
-        </div>
-        <div className="flex flex-row justify-start items-center gap-2">
-          <LocationPinIcon fill={iconFill} size={16} />
-          <h2 className="card-title">
-            {removePostcode(address.road)}, {address.postcode?.outcode}{" "}
-            {address.postcode?.incode}
-          </h2>
-        </div>
+        {renderPropertyInfoTop()}
+        {renderAddressLink()}
         <h3 className="card-title">{propertyInfo.price}</h3>
         <div className="flex flex-col gap-2">
           <span>
