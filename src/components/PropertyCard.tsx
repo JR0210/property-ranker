@@ -8,6 +8,9 @@ import {
 import LocationPinIcon from "@/icons/LocationPin";
 import BedroomIcon from "@/icons/Bedroom";
 import BathroomIcon from "@/icons/Bathroom";
+import CarIcon from "@/icons/Car";
+import CrimeIcon from "@/icons/Crime";
+import FoodIcon from "@/icons/Food";
 
 const iconFill = "fill-neutral dark:fill-neutral-content";
 
@@ -79,11 +82,16 @@ export default function PropertyCard({ propertyData, skeleton }: any) {
         {renderPropertyInfoTop()}
         {renderAddressLink()}
 
-        <div className="flex flex-col gap-2">
-          <span>
-            Insurance rating area: <b>{ratingArea}</b>
-          </span>
-          <div className="flex flex-col">
+        <div className="grid grid-cols-2 gap-2 mt-4">
+          <div className="flex flex-col items-start">
+            <CarIcon fill={iconFill} size={24} />
+            <span>
+              Insurance rating area: <b>{ratingArea}</b>
+            </span>
+          </div>
+
+          <div className="flex flex-col items-start">
+            <CrimeIcon fill={iconFill} size={24} />
             <span>
               No. of crimes in area: <b>{crime.length}</b>
             </span>
@@ -91,12 +99,16 @@ export default function PropertyCard({ propertyData, skeleton }: any) {
               No. of stop & search in area: <b>{stopSearch.length}</b>
             </span>
           </div>
-          <span>
-            No. of delivery restaurants:{" "}
-            <b>{(restaurants.Restaurants || []).length}</b>
-          </span>
+
+          <div className="flex flex-col items-start">
+            <FoodIcon fill={iconFill} size={24} />
+            <span>
+              No. of delivery restaurants:{" "}
+              <b>{(restaurants.Restaurants || []).length}</b>
+            </span>
+          </div>
           <a
-            className="w-fit text-accent hover:text-accent-focus"
+            className="w-fit text-accent hover:text-accent-focus col-span-2"
             href={property.broadband}
             target="_blank"
           >
@@ -126,7 +138,7 @@ export default function PropertyCard({ propertyData, skeleton }: any) {
         <div className="card-actions justify-end mt-auto">
           <a
             className={`btn btn-accent ${
-              skeleton && "cursor-not-allowed pointer-events-none"
+              skeleton && "btn-disabled cursor-not-allowed pointer-events-none"
             }`}
           >
             {skeleton ? (
