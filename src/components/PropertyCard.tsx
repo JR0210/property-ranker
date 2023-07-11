@@ -5,6 +5,11 @@ import {
   removePostcode,
   getPropertyTypeIcon,
 } from "@/utils";
+import LocationPinIcon from "@/icons/LocationPin";
+import BedroomIcon from "@/icons/Bedroom";
+import BathroomIcon from "@/icons/Bathroom";
+
+const iconFill = "fill-neutral dark:fill-neutral-content";
 
 export default function PropertyCard({ propertyData, skeleton }: any) {
   const {
@@ -16,6 +21,47 @@ export default function PropertyCard({ propertyData, skeleton }: any) {
   const { displayImage = "", address = {}, propertyInfo = {} } = property;
   const ratingArea = getPostcodeRatingArea(address.postcode?.outcode);
   const PropertyIcon = getPropertyTypeIcon(propertyInfo.propertyType);
+
+  const renderPropertyInfoTop = () => (
+    <div className="flex flex-row flex-start gap-4 mb-2">
+      {PropertyIcon && (
+        <div
+          className="tooltip tooltip-right"
+          data-tip={propertyInfo.propertyType}
+        >
+          <PropertyIcon fill={iconFill} size={32} />
+        </div>
+      )}
+      <div className="w-0.5 h-full bg-neutral dark:bg-neutral-content" />
+      <div className="flex flex-row justify-start items-center gap-2">
+        <BedroomIcon fill={iconFill} size={32} />
+        <span className="text-xl font-bold">x{propertyInfo.bedrooms}</span>
+      </div>
+      <div className="flex flex-row justify-start items-center gap-2">
+        <BathroomIcon fill={iconFill} size={32} />
+        <span className="text-xl font-bold">x{propertyInfo.bathrooms}</span>
+      </div>
+    </div>
+  );
+
+  const renderAddressLink = () => (
+    <>
+      <a
+        className={`flex flex-row justify-start items-center gap-2 transition-all duration-200 hover:opacity-80 ${
+          skeleton && "cursor-not-allowed pointer-events-none"
+        }`}
+        href={`https://www.google.com/maps/@${address.location?.latitude},${address.location?.longitude},17z`}
+        target="_blank"
+      >
+        <LocationPinIcon fill={iconFill} size={16} />
+        <h2 className="card-title">
+          {removePostcode(address.road)}, {address.postcode?.outcode}{" "}
+          {address.postcode?.incode}
+        </h2>
+      </a>
+      <h3 className="text-xl leading-5 font-semibold">{propertyInfo.price}</h3>
+    </>
+  );
 
   const renderBody = () => {
     if (skeleton) {
@@ -30,24 +76,9 @@ export default function PropertyCard({ propertyData, skeleton }: any) {
 
     return (
       <>
-        <div className="flex flex-row flex-start gap-2">
-          {PropertyIcon && (
-            <div
-              className="tooltip tooltip-right"
-              data-tip={propertyInfo.propertyType}
-            >
-              <PropertyIcon
-                fill="fill-neutral dark:fill-neutral-content"
-                size={32}
-              />
-            </div>
-          )}
-        </div>
-        <h2 className="card-title">
-          {removePostcode(address.road)}, {address.postcode?.outcode}{" "}
-          {address.postcode?.incode}
-        </h2>
-        <h3 className="card-title">{propertyInfo.price}</h3>
+        {renderPropertyInfoTop()}
+        {renderAddressLink()}
+
         <div className="flex flex-col gap-2">
           <span>
             Insurance rating area: <b>{ratingArea}</b>

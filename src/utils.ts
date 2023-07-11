@@ -3,6 +3,7 @@ import BungalowIcon from "./icons/Bungalow";
 import DetachedIcon from "./icons/Detached";
 import SemidetachedIcon from "./icons/Semidetached";
 import TerracedIcon from "./icons/Terraced";
+import FlatIcon from "./icons/Flat";
 
 export function createPostcodeMap(): Map<any, any> {
   const nestedMap = new Map();
@@ -78,6 +79,11 @@ export function removePostcode(str: string): string {
 
 function getPossibleTypes(type: string): any {
   const lowerCaseType = type.toLowerCase();
+  if (
+    ["apartment", "penthouse"].includes(lowerCaseType) ||
+    lowerCaseType.includes("flat")
+  )
+    return FlatIcon;
   if (lowerCaseType.includes("bungalow")) return BungalowIcon;
   if (
     lowerCaseType.includes("terrace") ||
@@ -97,6 +103,8 @@ export function getPropertyTypeIcon(type: string = ""): any {
       return TerracedIcon;
     case "bungalow":
       return BungalowIcon;
+    case "flat":
+      return FlatIcon;
     default:
       return getPossibleTypes(type);
   }
