@@ -109,3 +109,9 @@ export function getPropertyTypeIcon(type: string = ""): any {
       return getPossibleTypes(type);
   }
 }
+
+export function convertCurrencyToNumber(currencyString: string): number {
+  const numericString = currencyString.replace(/[^0-9.-]+/g, "");
+  const numericValue = parseFloat(numericString);
+  return numericValue;
+}
