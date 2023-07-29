@@ -46,7 +46,7 @@ export default function Home() {
           }
           return newData;
         });
-        await new Promise((resolve) => setTimeout(resolve, 2000)); // Wait for 2 seconds
+        await new Promise((resolve) => setTimeout(resolve, 500)); // Wait for 2 seconds
       }
 
       setLoading(false);
@@ -79,10 +79,11 @@ export default function Home() {
             +a.property?.propertyInfo?.bathrooms -
             +b.property?.propertyInfo?.bathrooms
           );
-        case "Insurance rating area":
-          return a.insuranceRatingArea - b.insuranceRatingArea;
+        // TODO - Needs to be added into object rather than called in card
+        // case "Insurance rating area":
+        //   return a.insuranceRatingArea - b.insuranceRatingArea;
         case "Crimes":
-          return a.crimes - b.crimes;
+          return a.crime?.length - b.crime?.length;
         case "Stop & searches":
           return a.stopAndSearches - b.stopAndSearches;
         case "Restaurants":
