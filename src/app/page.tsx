@@ -85,9 +85,9 @@ export default function Home() {
         case "Crimes":
           return a.crime?.length - b.crime?.length;
         case "Stop & searches":
-          return a.stopAndSearches - b.stopAndSearches;
+          return a.stopSearch?.length - b.stopSearch?.length;
         case "Restaurants":
-          return a.restaurants - b.restaurants;
+          return a.restaurants?.Restaurants?.length - b.restaurants?.Restaurants?.length;
         default:
           return 0;
       }
