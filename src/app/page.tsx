@@ -67,7 +67,8 @@ export default function Home() {
       switch (selectedOption) {
         case "Price":
           return (
-            convertCurrencyToNumber(a.price) - convertCurrencyToNumber(b.price)
+            convertCurrencyToNumber(a.property?.propertyInfo?.price) -
+            convertCurrencyToNumber(b.property?.propertyInfo?.price)
           );
         case "Bedrooms":
           return (
@@ -87,7 +88,10 @@ export default function Home() {
         case "Stop & searches":
           return a.stopSearch?.length - b.stopSearch?.length;
         case "Restaurants":
-          return a.restaurants?.Restaurants?.length - b.restaurants?.Restaurants?.length;
+          return (
+            a.restaurants?.Restaurants?.length -
+            b.restaurants?.Restaurants?.length
+          );
         default:
           return 0;
       }
