@@ -14,10 +14,16 @@ export default function Home() {
   const [propertyData, setPropertyData] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState("");
+  const [selectedOrder, setOrderOption] = useState("Ascending");
 
   function handleSelectChange(event: any): void {
     console.log(event, event.target.value, "event.target.value");
     setSelectedOption(event.target.value);
+  }
+
+  function handleOrderChange(event: any): void {
+    console.log(event, event.target.value, "event.target.value");
+    setOrderOption(event.target.value);
   }
 
   useEffect(() => {
@@ -97,9 +103,8 @@ export default function Home() {
       }
     });
 
-    console.log(sortedData, "sortedData");
-    return sortedData;
-  }, [propertyData, selectedOption]);
+    return selectedOrder === 'Ascending' ? sortedData : sortedData.reverse();
+  }, [propertyData, selectedOption, selectedOrder]);
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-start p-24 gap-8">
@@ -134,6 +139,7 @@ export default function Home() {
               disabled={
                 (propertyUrls.length === 0 || loading) && !selectedOption
               }
+              onChange={handleOrderChange}
             >
               <option>Ascending</option>
               <option>Descending</option>
