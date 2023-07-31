@@ -1,10 +1,6 @@
 import Image from "next/image";
 import Skeleton from "./Skeleton";
-import {
-  getPostcodeRatingArea,
-  removePostcode,
-  getPropertyTypeIcon,
-} from "@/utils";
+import { removePostcode, getPropertyTypeIcon } from "@/utils";
 import LocationPinIcon from "@/icons/LocationPin";
 import BedroomIcon from "@/icons/Bedroom";
 import BathroomIcon from "@/icons/Bathroom";
@@ -22,8 +18,11 @@ export default function PropertyCard({ propertyData, skeleton }: any) {
     restaurants = {},
     url,
   } = propertyData;
-  const { displayImage = "", address = {}, propertyInfo = {} } = property;
-  const ratingArea = getPostcodeRatingArea(address.postcode?.outcode);
+  const {
+    displayImage = "",
+    address = {},
+    propertyInfo = {},
+  } = property;
   const PropertyIcon = getPropertyTypeIcon(propertyInfo.propertyType);
 
   const renderPropertyInfoTop = () => (
@@ -87,7 +86,7 @@ export default function PropertyCard({ propertyData, skeleton }: any) {
           <div className="flex flex-col items-start">
             <CarIcon fill={iconFill} size={24} />
             <span>
-              Insurance rating area: <b>{ratingArea}</b>
+              Insurance rating area: <b>{propertyInfo.ratingArea}</b>
             </span>
           </div>
 
