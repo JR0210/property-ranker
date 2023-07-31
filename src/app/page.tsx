@@ -17,12 +17,10 @@ export default function Home() {
   const [selectedOrder, setOrderOption] = useState("Ascending");
 
   function handleSelectChange(event: any): void {
-    console.log(event, event.target.value, "event.target.value");
     setSelectedOption(event.target.value);
   }
 
   function handleOrderChange(event: any): void {
-    console.log(event, event.target.value, "event.target.value");
     setOrderOption(event.target.value);
   }
 
@@ -65,7 +63,6 @@ export default function Home() {
   }, [propertyUrls]);
 
   const sortedPropertyData = useMemo(() => {
-    console.log(selectedOption, "selectedOption");
     if (!selectedOption) return propertyData;
 
     const sortedData = [...propertyData];
@@ -86,9 +83,8 @@ export default function Home() {
             +a.property?.propertyInfo?.bathrooms -
             +b.property?.propertyInfo?.bathrooms
           );
-        // TODO - Needs to be added into object rather than called in card
-        // case "Insurance rating area":
-        //   return a.insuranceRatingArea - b.insuranceRatingArea;
+        case "Insurance rating area":
+          return a.property?.propertyInfo?.ratingArea?.localeCompare(b.property?.propertyInfo?.ratingArea);
         case "Crimes":
           return a.crime?.length - b.crime?.length;
         case "Stop & searches":
