@@ -46,7 +46,6 @@ export default function PropertyAdd({ loading }: { loading: boolean }) {
       if (urls.length === 0) error = "Pasted data includes no URLs";
 
       if (error) {
-        console.log(error, urls);
         return;
       }
 
