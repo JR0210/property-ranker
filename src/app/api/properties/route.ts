@@ -1,4 +1,5 @@
 import { JSDOM } from "jsdom";
+import { getPostcodeRatingArea } from "@/utils";
 
 function sanitizeJSONString(jsonString: string): { [key: string]: any } {
   // Remove line breaks and excessive whitespace
@@ -88,6 +89,7 @@ export async function POST(request: Request): Promise<Response> {
         price: prices.primaryPrice,
         similarProperties: propertyUrls.similarPropertiesUrl,
         soldNearBy: propertyUrls.nearbySoldPropertiesUrl,
+        ratingArea: getPostcodeRatingArea(address.outcode)
       },
       listingUpdate: listingHistory?.listingUpdateReason,
       councilTax: livingCosts?.councilTaxBand,

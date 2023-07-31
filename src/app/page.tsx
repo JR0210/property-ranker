@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Roboto_Serif } from "next/font/google";
 import PropertyAdd from "@/components/PropertyAdd";
 import PropertiesContext from "@/PropertiesContext";
 import PropertyCard from "@/components/PropertyCard";
+import { convertCurrencyToNumber } from "@/utils";
 
 const robotoSerif = Roboto_Serif({ subsets: ["latin"] });
 
@@ -12,6 +13,16 @@ export default function Home() {
   const [propertyUrls, setPropertyUrls] = useState<string[]>([]);
   const [propertyData, setPropertyData] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [selectedOption, setSelectedOption] = useState("");
+  const [selectedOrder, setOrderOption] = useState("Ascending");
+
+  function handleSelectChange(event: any): void {
+    setSelectedOption(event.target.value);
+  }
+
+  function handleOrderChange(event: any): void {
+    setOrderOption(event.target.value);
+  }
 
   useEffect(() => {
     async function makeAPICall(url: string) {
@@ -39,7 +50,7 @@ export default function Home() {
           }
           return newData;
         });
-        await new Promise((resolve) => setTimeout(resolve, 2000)); // Wait for 2 seconds
+        await new Promise((resolve) => setTimeout(resolve, 500)); // Wait for 2 seconds
       }
 
       setLoading(false);
@@ -51,6 +62,46 @@ export default function Home() {
     }
   }, [propertyUrls]);
 
+  const sortedPropertyData = useMemo(() => {
+    if (!selectedOption) return propertyData;
+
+    const sortedData = [...propertyData];
+    sortedData.sort((a: any, b: any): any => {
+      switch (selectedOption) {
+        case "Price":
+          return (
+            convertCurrencyToNumber(a.property?.propertyInfo?.price) -
+            convertCurrencyToNumber(b.property?.propertyInfo?.price)
+          );
+        case "Bedrooms":
+          return (
+            +a.property?.propertyInfo?.bedrooms -
+            +b.property?.propertyInfo?.bedrooms
+          );
+        case "Bathrooms":
+          return (
+            +a.property?.propertyInfo?.bathrooms -
+            +b.property?.propertyInfo?.bathrooms
+          );
+        case "Insurance rating area":
+          return a.property?.propertyInfo?.ratingArea?.localeCompare(b.property?.propertyInfo?.ratingArea);
+        case "Crimes":
+          return a.crime?.length - b.crime?.length;
+        case "Stop & searches":
+          return a.stopSearch?.length - b.stopSearch?.length;
+        case "Restaurants":
+          return (
+            a.restaurants?.Restaurants?.length -
+            b.restaurants?.Restaurants?.length
+          );
+        default:
+          return 0;
+      }
+    });
+
+    return selectedOrder === 'Ascending' ? sortedData : sortedData.reverse();
+  }, [propertyData, selectedOption, selectedOrder]);
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-start p-24 gap-8">
       <h1 className="text-6xl font-bold tracking-tight">
@@ -59,13 +110,42 @@ export default function Home() {
       </h1>
 
       <PropertiesContext.Provider value={{ propertyUrls, setPropertyUrls }}>
-        <div>
+        <div className="grid grid-cols-3 gap-32">
+          <div />
           <PropertyAdd loading={loading} />
+          <div className="flex flex-row h-fit self-end gap-4">
+            <select
+              disabled={propertyUrls.length === 0 || loading}
+              className="select select-accent disabled:opacity-50"
+              onChange={handleSelectChange}
+            >
+              <option disabled selected hidden>
+                Sort by
+              </option>
+              <option>Price</option>
+              <option>Bedrooms</option>
+              <option>Bathrooms</option>
+              <option>Insurance rating area</option>
+              <option>Crimes</option>
+              <option>Stop & searches</option>
+              <option>Restaurants</option>
+            </select>
+            <select
+              className="select select-accent disabled:opacity-50"
+              disabled={
+                (propertyUrls.length === 0 || loading) && !selectedOption
+              }
+              onChange={handleOrderChange}
+            >
+              <option>Ascending</option>
+              <option>Descending</option>
+            </select>
+          </div>
         </div>
 
         {propertyData.length > 0 && (
           <div className="w-full grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
-            {propertyData.map((property: any, index: number) => (
+            {sortedPropertyData.map((property: any, index: number) => (
               <PropertyCard
                 key={index}
                 propertyData={property}

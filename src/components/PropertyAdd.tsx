@@ -9,7 +9,7 @@ import AddModal from "./AddModal";
 import PropertiesContext from "../PropertiesContext";
 import { validateUrl } from "@/utils";
 
-export default function PropertyAdd({ loading }: { loading: boolean}) {
+export default function PropertyAdd({ loading }: { loading: boolean }) {
   const { setPropertyUrls } = useContext(PropertiesContext);
   const modalRef = useRef<HTMLDivElement>(null);
   const isTouchscreen = useTouchscreenDetection();
@@ -23,7 +23,8 @@ export default function PropertyAdd({ loading }: { loading: boolean}) {
   useEffect(() => {
     function handlePaste(e: ClipboardEvent) {
       const parentEl = modalRef.current?.parentElement;
-      if (parentEl && parentEl.className.includes("modal-open") || loading) return;
+      if ((parentEl && parentEl.className.includes("modal-open")) || loading)
+        return;
 
       const clipboardData = e.clipboardData;
       if (!clipboardData) return;
@@ -45,7 +46,6 @@ export default function PropertyAdd({ loading }: { loading: boolean}) {
       if (urls.length === 0) error = "Pasted data includes no URLs";
 
       if (error) {
-        console.log(error, urls);
         return;
       }
 
@@ -114,18 +114,14 @@ export default function PropertyAdd({ loading }: { loading: boolean}) {
           </div>
         )}
         <span className="text-accent text-lg font-extrabold">OR</span>
-        <div
-          tabIndex={0}
-          className="collapse collapse-arrow border border-base-300 bg-base-200 text-left"
+
+        <button
+          className="btn text-lg font-medium rounded-2xl p-4 h-auto"
+          onClick={() => setModalOpen(true)}
+          disabled={loading}
         >
-          <button
-            className="btn text-lg font-medium"
-            onClick={() => setModalOpen(true)}
-            disabled={loading}
-          >
-            Add Property Links
-          </button>
-        </div>
+          Add Property Links
+        </button>
       </div>
     </>
   );
