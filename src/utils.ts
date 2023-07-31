@@ -54,7 +54,10 @@ export function getPostcodeRatingArea(outcode: string): string | null {
   const { letters, numeric } = outcodeHalves;
   if (postcodeMap.has(letters)) {
     const parentMap = postcodeMap.get(letters);
-    if (parentMap.has(numeric)) return parentMap.get(numeric);
+    if (parentMap.has(numeric)) {
+      const ratingArea = parentMap.get(numeric);
+      return Array.isArray(ratingArea) ? ratingArea[0] : ratingArea;
+    }
 
     return "Refer";
   }
