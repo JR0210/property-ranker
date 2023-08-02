@@ -8,9 +8,15 @@ import CarIcon from "@/icons/Car";
 import CrimeIcon from "@/icons/Crime";
 import FoodIcon from "@/icons/Food";
 
+interface PropertyCardProps {
+  propertyData: any;
+  skeleton?: boolean;
+  breakpoint?: string;
+}
+
 const iconFill = "fill-neutral dark:fill-neutral-content";
 
-export default function PropertyCard({ propertyData, skeleton }: any) {
+export default function PropertyCard({ propertyData, skeleton, breakpoint }: PropertyCardProps) {
   const {
     property = {},
     crime = [],
@@ -24,6 +30,7 @@ export default function PropertyCard({ propertyData, skeleton }: any) {
     propertyInfo = {},
   } = property;
   const PropertyIcon = getPropertyTypeIcon(propertyInfo.propertyType);
+  const iconSize = breakpoint === "sm" ? 24 : 32;
 
   const renderPropertyInfoTop = () => (
     <div className="flex flex-row flex-start gap-4 mb-2">
@@ -32,17 +39,17 @@ export default function PropertyCard({ propertyData, skeleton }: any) {
           className="tooltip tooltip-right"
           data-tip={propertyInfo.propertyType}
         >
-          <PropertyIcon fill={iconFill} size={32} />
+          <PropertyIcon fill={iconFill} size={iconSize} />
         </div>
       )}
       <div className="w-0.5 h-full bg-neutral dark:bg-neutral-content" />
       <div className="flex flex-row justify-start items-center gap-2">
-        <BedroomIcon fill={iconFill} size={32} />
-        <span className="text-xl font-bold">x{propertyInfo.bedrooms}</span>
+        <BedroomIcon fill={iconFill} size={iconSize} />
+        <span className="text-lg md:text-xl font-bold">x{propertyInfo.bedrooms}</span>
       </div>
       <div className="flex flex-row justify-start items-center gap-2">
-        <BathroomIcon fill={iconFill} size={32} />
-        <span className="text-xl font-bold">x{propertyInfo.bathrooms}</span>
+        <BathroomIcon fill={iconFill} size={iconSize} />
+        <span className="text-lg md:text-xl font-bold">x{propertyInfo.bathrooms}</span>
       </div>
     </div>
   );
@@ -56,8 +63,8 @@ export default function PropertyCard({ propertyData, skeleton }: any) {
         href={`https://www.google.com/maps/@${address.location?.latitude},${address.location?.longitude},17z`}
         target="_blank"
       >
-        <LocationPinIcon fill={iconFill} size={16} />
-        <h2 className="card-title">
+        <LocationPinIcon fill={iconFill} size={breakpoint === 'sm' ? 16 : 24} classNames="min-w-[16px] md:min-w-[24px]" />
+        <h2 className="card-title text-lg md:text-xl">
           {removePostcode(address.road)}, {address.postcode?.outcode}{" "}
           {address.postcode?.incode}
         </h2>
