@@ -103,7 +103,7 @@ export default function Home() {
   }, [propertyData, selectedOption, selectedOrder]);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-start p-24 gap-8">
+    <main className="flex min-h-screen flex-col items-center justify-start py-10 px-24 gap-8">
       <h1 className="text-6xl font-bold tracking-tight">
         Compare your next{" "}
         <span className={`${robotoSerif.className} text-accent`}>home</span>
