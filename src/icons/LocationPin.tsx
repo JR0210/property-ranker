@@ -1,16 +1,18 @@
 export default function LocationPinIcon({
   fill,
   size,
+  classNames,
 }: {
   fill: string;
   size: number;
+  classNames?: string;
 }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       height={size}
       viewBox="0 0 277.3489 384.1636"
-      className="w-auto"
+      className={`w-auto ${classNames}`}
     >
       <path
         className={fill}
