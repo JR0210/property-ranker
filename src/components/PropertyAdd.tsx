@@ -87,12 +87,12 @@ export default function PropertyAdd({ loading }: { loading: boolean }) {
       />
 
       <div className="flex flex-col gap-4 text-center items-center">
-        <h2 className="text-xl bold">To add properties:</h2>
+        <h2 className="text-base md:text-xl bold">To add properties:</h2>
         {!isTouchscreen ? (
           <div className="flex items-center text-lg w-fit relative">
-            <kbd className="kbd w-16">CTRL</kbd>
+            <kbd className="kbd w-fit lg:w-16">CTRL</kbd>
             &nbsp;+&nbsp;
-            <kbd className="kbd w-16">V</kbd>
+            <kbd className="kbd w-fit lg:w-16">V</kbd>
             <div
               className="mb-auto ml-2 tooltip tooltip-right absolute -right-6 top-0"
               data-tip="Expects a CSV (comma separated list) of Rightmove URLs"
@@ -102,7 +102,7 @@ export default function PropertyAdd({ loading }: { loading: boolean }) {
           </div>
         ) : (
           <div className="flex flex-col gap-4">
-            <div className="flex items-center text-lg w-fit relative">
+            <div className="flex items-center text-sm md:text-lg w-fit relative">
               <button className="btn">Paste</button>
               <div
                 className="mb-auto ml-2 tooltip tooltip-bottom absolute -right-6 top-0"
@@ -113,10 +113,10 @@ export default function PropertyAdd({ loading }: { loading: boolean }) {
             </div>
           </div>
         )}
-        <span className="text-accent text-lg font-extrabold">OR</span>
+        <span className="text-accent text-base md:text-lg font-extrabold">OR</span>
 
         <button
-          className="btn text-lg font-medium rounded-2xl p-4 h-auto"
+          className="btn text-sm md:text-lg font-medium rounded-2xl p-4 h-auto"
           onClick={() => setModalOpen(true)}
           disabled={loading}
         >
