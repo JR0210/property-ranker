@@ -89,7 +89,7 @@ export default function PropertyCard({ propertyData, skeleton, breakpoint }: Pro
         {renderPropertyInfoTop()}
         {renderAddressLink()}
 
-        <div className="grid grid-cols-2 gap-2 mt-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-2 mt-4">
           <div className="flex flex-col items-start">
             <CarIcon fill={iconFill} size={24} />
             <span>
@@ -115,7 +115,7 @@ export default function PropertyCard({ propertyData, skeleton, breakpoint }: Pro
             </span>
           </div>
           <a
-            className="w-fit text-accent hover:text-accent-focus col-span-2"
+            className="w-fit text-accent hover:text-accent-focus md:col-span-2"
             href={property.broadband}
             target="_blank"
           >
