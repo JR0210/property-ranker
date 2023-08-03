@@ -6,10 +6,12 @@ import PropertyAdd from "@/components/PropertyAdd";
 import PropertiesContext from "@/PropertiesContext";
 import PropertyCard from "@/components/PropertyCard";
 import { convertCurrencyToNumber } from "@/utils";
+import useBreakpoint from "@/utils/useBreakpoint";
 
 const robotoSerif = Roboto_Serif({ subsets: ["latin"] });
 
 export default function Home() {
+  const breakpoint = useBreakpoint();
   const [propertyUrls, setPropertyUrls] = useState<string[]>([]);
   const [propertyData, setPropertyData] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -103,8 +105,8 @@ export default function Home() {
   }, [propertyData, selectedOption, selectedOrder]);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-start py-10 px-24 gap-8">
-      <h1 className="text-6xl font-bold tracking-tight">
+    <main className="flex min-h-screen flex-col items-center justify-start py-4 px-8 lg:py-10 lg:px-24 gap-8">
+      <h1 className="text-2xl lg:text-4xl 2xl:text-6xl font-bold tracking-tight text-center">
         Compare your next{" "}
         <span className={`${robotoSerif.className} text-accent`}>home</span>
       </h1>
@@ -144,12 +146,13 @@ export default function Home() {
         </div>
 
         {propertyData.length > 0 && (
-          <div className="w-full grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+          <div className="w-full grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4">
             {sortedPropertyData.map((property: any, index: number) => (
               <PropertyCard
                 key={index}
                 propertyData={property}
                 skeleton={property.loading}
+                breakpoint={breakpoint}
               />
             ))}
           </div>
