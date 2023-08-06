@@ -5,9 +5,9 @@ import { forwardRef } from "react";
 interface ModalBaseProps {
   modalOpen: boolean;
   setModalOpen: (open: boolean) => void;
+  title: string;
   submit?: () => void;
   submitDisabled?: boolean;
-  title: string;
   children: React.ReactNode;
 }
 
@@ -29,7 +29,7 @@ export default forwardRef<HTMLDivElement, ModalBaseProps>(function ModalBase(
   }
 
   function handleSubmit() {
-    if (submitExists) submit();
+    submit!();
     setModalOpen(false);
   }
 
