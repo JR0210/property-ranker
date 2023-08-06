@@ -8,6 +8,9 @@ interface ModalBaseProps {
   title: string;
   submit?: () => void;
   submitDisabled?: boolean;
+  cancel?: () => void;
+  submitText?: string;
+  cancelText?: string;
   children: React.ReactNode;
 }
 
@@ -17,7 +20,10 @@ export default forwardRef<HTMLDivElement, ModalBaseProps>(function ModalBase(
     setModalOpen,
     title,
     submit,
+    cancel,
     submitDisabled,
+    submitText = "Submit",
+    cancelText = "Cancel",
     children,
   }: ModalBaseProps,
   ref
@@ -25,6 +31,7 @@ export default forwardRef<HTMLDivElement, ModalBaseProps>(function ModalBase(
   const submitExists = typeof submit !== "undefined";
 
   function handleClose() {
+    cancel!();
     setModalOpen(false);
   }
 
@@ -51,7 +58,7 @@ export default forwardRef<HTMLDivElement, ModalBaseProps>(function ModalBase(
             className={`btn ${!submitExists && "btn-accent"}`}
             onClick={handleClose}
           >
-            Close
+            {cancelText}
           </button>
           {submitExists && (
             <button
@@ -59,7 +66,7 @@ export default forwardRef<HTMLDivElement, ModalBaseProps>(function ModalBase(
               disabled={submitDisabled}
               onClick={handleSubmit}
             >
-              Submit
+              {submitText}
             </button>
           )}
         </div>
