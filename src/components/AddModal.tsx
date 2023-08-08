@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useContext, forwardRef } from "react";
 import RowInput from "./RowInput";
-import PropertiesContext from "../PropertiesContext";
+import PropertiesContext from "@/utils/PropertiesContext";
 import { validateUrl } from "@/utils";
 import ModalBase from "./ModalBase";
 

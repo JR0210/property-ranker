@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState, useRef, useContext } from "react";
-import { useTouchscreenDetection } from "@/hooks";
+import useTouchscreenDetection from "@/utils/useTouchscreenDetection";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestionCircle } from "@fortawesome/free-regular-svg-icons";
 
 import AddModal from "./AddModal";
-import PropertiesContext from "../PropertiesContext";
+import PropertiesContext from "@/utils/PropertiesContext";
 import { validateUrl } from "@/utils";
 
 export default function PropertyAdd({ loading }: { loading: boolean }) {
