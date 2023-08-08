@@ -36,7 +36,7 @@ export default function Home() {
     }
 
     fetchCrimeTypes();
-  }, [])
+  }, []);
 
   useEffect(() => {
     async function makeAPICall(url: string) {
@@ -98,7 +98,9 @@ export default function Home() {
             +b.property?.propertyInfo?.bathrooms
           );
         case "Insurance rating area":
-          return a.property?.propertyInfo?.ratingArea?.localeCompare(b.property?.propertyInfo?.ratingArea);
+          return a.property?.propertyInfo?.ratingArea?.localeCompare(
+            b.property?.propertyInfo?.ratingArea
+          );
         case "Crimes":
           return a.crime?.length - b.crime?.length;
         case "Stop & searches":
@@ -113,7 +115,7 @@ export default function Home() {
       }
     });
 
-    return selectedOrder === 'Ascending' ? sortedData : sortedData.reverse();
+    return selectedOrder === "Ascending" ? sortedData : sortedData.reverse();
   }, [propertyData, selectedOption, selectedOrder]);
 
   return (
@@ -123,7 +125,9 @@ export default function Home() {
         <span className={`${robotoSerif.className} text-accent`}>home</span>
       </h1>
 
-      <PropertiesContext.Provider value={{ propertyUrls, setPropertyUrls, crimeTypes }}>
+      <PropertiesContext.Provider
+        value={{ propertyUrls, setPropertyUrls, crimeTypes }}
+      >
         <div className="grid grid-cols-3 gap-32">
           <div />
           <PropertyAdd loading={loading} />
@@ -132,8 +136,9 @@ export default function Home() {
               disabled={propertyUrls.length === 0 || loading}
               className="select select-accent disabled:opacity-50"
               onChange={handleSelectChange}
+              defaultValue="Sort by"
             >
-              <option disabled selected hidden>
+              <option disabled hidden>
                 Sort by
               </option>
               <option>Price</option>
