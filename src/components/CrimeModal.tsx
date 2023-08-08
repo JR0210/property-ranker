@@ -1,40 +1,66 @@
 "use client";
 
 import { forwardRef } from "react";
+import ModalBase from "./ModalBase";
+
+interface Crime {
+  id: number;
+  category: string;
+  month: string;
+  location: {
+    street: {
+      name: string;
+    };
+  };
+}
 
 interface CrimeModalProps {
   modalOpen: boolean;
   setModalOpen: (open: boolean) => void;
   title: string;
+  data: Crime[];
 }
 
 export default forwardRef<HTMLDivElement, CrimeModalProps>(function CrimeModal(
-  { modalOpen, setModalOpen, title }: CrimeModalProps,
+  { modalOpen, setModalOpen, title, data = [] }: CrimeModalProps,
   ref
 ) {
-
   function handleClose() {
     setModalOpen(false);
   }
 
-
   return (
-    <div className={`modal ${modalOpen && "modal-open"}`}>
-      <div className="modal-box" ref={ref}>
-        <button
-          className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-          onClick={handleClose}
-        >
-          ✕
-        </button>
-        <h3 className="text-xl font-bold">{title} Crime</h3>
+    <ModalBase
+      title={title}
+      modalOpen={modalOpen}
+      setModalOpen={setModalOpen}
+      cancel={handleClose}
+      styling="w-3/5 max-w-5xl"
+      ref={ref}
+    >
+      <div className="overflow-x-auto">
+        <table className="table table-zebra table-md">
+          <thead className="text-neutral-content text-base">
+            <tr>
+              <th>Year/Month</th>
+              <th>Crime</th>
+              <th>Location</th>
+            </tr>
+          </thead>
 
-        <div className="modal-action">
-          <button className="btn btn-accent" onClick={handleClose}>
-            Close
-          </button>
-        </div>
+          <tbody>
+            {data
+              .sort((a, b) => a.month.localeCompare(b.month))
+              .map((crime) => (
+                <tr key={crime.id}>
+                  <td>{crime.month}</td>
+                  <td>{crime.category}</td>
+                  <td>{crime.location?.street?.name}</td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
       </div>
-    </div>
+    </ModalBase>
   );
 });
