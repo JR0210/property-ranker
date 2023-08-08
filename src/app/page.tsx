@@ -123,7 +123,7 @@ export default function Home() {
         <span className={`${robotoSerif.className} text-accent`}>home</span>
       </h1>
 
-      <PropertiesContext.Provider value={{ propertyUrls, setPropertyUrls }}>
+      <PropertiesContext.Provider value={{ propertyUrls, setPropertyUrls, crimeTypes }}>
         <div className="grid grid-cols-3 gap-32">
           <div />
           <PropertyAdd loading={loading} />
