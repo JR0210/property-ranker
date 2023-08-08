@@ -12,6 +12,7 @@ interface ModalBaseProps {
   submitText?: string;
   cancelText?: string;
   children: React.ReactNode;
+  styling?: string;
 }
 
 export default forwardRef<HTMLDivElement, ModalBaseProps>(function ModalBase(
@@ -25,6 +26,7 @@ export default forwardRef<HTMLDivElement, ModalBaseProps>(function ModalBase(
     submitText = "Submit",
     cancelText = "Cancel",
     children,
+    styling,
   }: ModalBaseProps,
   ref
 ) {
@@ -42,7 +44,7 @@ export default forwardRef<HTMLDivElement, ModalBaseProps>(function ModalBase(
 
   return (
     <div className={`modal ${modalOpen && "modal-open"}`}>
-      <div className="modal-box" ref={ref}>
+      <div className={`modal-box ${styling}`} ref={ref}>
         <button
           className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
           onClick={handleClose}
