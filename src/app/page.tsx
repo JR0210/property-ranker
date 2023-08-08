@@ -3,10 +3,11 @@
 import { useState, useEffect, useMemo } from "react";
 import { Roboto_Serif } from "next/font/google";
 import PropertyAdd from "@/components/PropertyAdd";
-import PropertiesContext from "@/PropertiesContext";
+import PropertiesContext from "@/utils/PropertiesContext";
 import PropertyCard from "@/components/PropertyCard";
 import { convertCurrencyToNumber } from "@/utils";
 import useBreakpoint from "@/utils/useBreakpoint";
+import { CrimeURL } from "@/types";
 
 const robotoSerif = Roboto_Serif({ subsets: ["latin"] });
 
@@ -17,6 +18,7 @@ export default function Home() {
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState("");
   const [selectedOrder, setOrderOption] = useState("Ascending");
+  const [crimeTypes, setCrimeTypes] = useState<CrimeURL[]>([]);
 
   function handleSelectChange(event: any): void {
     setSelectedOption(event.target.value);
@@ -25,6 +27,16 @@ export default function Home() {
   function handleOrderChange(event: any): void {
     setOrderOption(event.target.value);
   }
+
+  useEffect(() => {
+    async function fetchCrimeTypes() {
+      const res = await fetch("/api/crime-types");
+      const jsonRes = await res.json();
+      setCrimeTypes(jsonRes.data);
+    }
+
+    fetchCrimeTypes();
+  }, [])
 
   useEffect(() => {
     async function makeAPICall(url: string) {
@@ -52,7 +64,7 @@ export default function Home() {
           }
           return newData;
         });
-        await new Promise((resolve) => setTimeout(resolve, 500)); // Wait for 2 seconds
+        await new Promise((resolve) => setTimeout(resolve, 500)); // Wait for 500 ms
       }
 
       setLoading(false);
