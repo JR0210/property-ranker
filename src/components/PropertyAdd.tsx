@@ -1,13 +1,15 @@
 "use client";
 
-import { useEffect, useState, useRef, useContext } from "react";
+import { useState, useRef, useContext } from "react";
 import useTouchscreenDetection from "@/utils/useTouchscreenDetection";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestionCircle } from "@fortawesome/free-regular-svg-icons";
 
 import AddModal from "./AddModal";
 import PropertiesContext from "@/utils/PropertiesContext";
-import { validateUrl } from "@/utils";
+import { handlePasteFormatting } from "@/utils";
+import useClipboardPaste from "@/utils/useClipboardPaste";
+import useCloseModal from "@/utils/useCloseModal";
 
 export default function PropertyAdd({ loading }: { loading: boolean }) {
   const { setPropertyUrls } = useContext(PropertiesContext);
@@ -20,62 +22,22 @@ export default function PropertyAdd({ loading }: { loading: boolean }) {
     setModalOpen(false);
   }
 
-  useEffect(() => {
-    function handlePaste(e: ClipboardEvent) {
-      const parentEl = modalRef.current?.parentElement;
-      if ((parentEl && parentEl.className.includes("modal-open")) || loading)
-        return;
+  function handlePaste(clipboardData: DataTransfer | null) {
+    const parentEl = modalRef.current?.parentElement;
+    if ((parentEl && parentEl.className.includes("modal-open")) || loading)
+      return;
 
-      const clipboardData = e.clipboardData;
-      if (!clipboardData) return;
+    if (!clipboardData) return;
 
-      const pastedData = clipboardData.getData("Text");
-      const items = pastedData.split("\n").filter((item) => item !== "");
+    const urls = handlePasteFormatting(clipboardData);
 
-      let urls = [];
-      let error: string | null = null;
-      for (let i = 0; i < items.length; i++) {
-        if (!validateUrl(items[i])) {
-          error = "Pasted data includes invalid URLs";
-          break;
-        }
-        urls[i] = items[i].trim();
-      }
+    if (!urls) return;
 
-      if (urls.length > 10) error = "Pasted data includes too many URLs";
-      if (urls.length === 0) error = "Pasted data includes no URLs";
+    setPropertyUrls(urls);
+  }
 
-      if (error) {
-        return;
-      }
-
-      setPropertyUrls(urls);
-    }
-
-    document.addEventListener("paste", handlePaste);
-
-    document.addEventListener("keydown", (e) => {
-      if (modalOpen && e.key === "Escape") {
-        setModalOpen(false);
-      }
-    });
-
-    document.addEventListener("mousedown", (e) => {
-      if (
-        modalOpen &&
-        modalRef.current &&
-        !modalRef.current.contains(e.target as Node)
-      ) {
-        setModalOpen(false);
-      }
-    });
-
-    return () => {
-      document.removeEventListener("paste", handlePaste);
-      document.removeEventListener("keydown", () => {});
-      document.removeEventListener("mousedown", () => {});
-    };
-  }, [modalOpen, modalRef, setPropertyUrls, loading]);
+  useClipboardPaste(handlePaste);
+  useCloseModal(modalOpen, modalRef, setModalOpen);
 
   return (
     <>
@@ -113,7 +75,9 @@ export default function PropertyAdd({ loading }: { loading: boolean }) {
             </div>
           </div>
         )}
-        <span className="text-accent text-base md:text-lg font-extrabold">OR</span>
+        <span className="text-accent text-base md:text-lg font-extrabold">
+          OR
+        </span>
 
         <button
           className="btn text-sm md:text-lg font-medium rounded-2xl p-4 h-auto"
