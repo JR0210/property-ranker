@@ -1,18 +1,18 @@
 "use client";
 
 import { createContext } from "react";
-import { CrimeURL } from "@/types";
+import { CrimeTypes } from "@/types";
 
 interface PropertiesContextType {
   propertyUrls: string[];
   setPropertyUrls: (propertyUrls: string[]) => void;
-  crimeTypes: CrimeURL[];
+  crimeTypes: CrimeTypes;
 }
 
 const PropertiesContext = createContext({
   propertyUrls: [],
   setPropertyUrls: () => {},
-  crimeTypes: [],
+  crimeTypes: {},
 } as PropertiesContextType);
 
 export default PropertiesContext;
