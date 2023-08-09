@@ -155,7 +155,7 @@ export default function PropertyCard({
         modalOpen={modalOpen}
         setModalOpen={setModalOpen}
         data={crime}
-        streetName={address.road.split(", ")[0]}
+        streetName={address?.road?.split(", ")[0]}
         ref={modalRef}
       />
       <div className="card w-full shadow-xl bg-base-300 border border-neutral-content dark:border-neutral">
