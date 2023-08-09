@@ -117,7 +117,7 @@ export default function PropertyCard({
           </div>
 
           <div
-            className="flex flex-col items-start"
+            className="flex flex-col items-start cursor-pointer transition-all hover:bg-base-100"
             onClick={() => setModalOpen(true)}
           >
             <CrimeIcon fill={iconFill} size={24} />
