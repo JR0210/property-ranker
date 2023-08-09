@@ -7,7 +7,7 @@ import PropertiesContext from "@/utils/PropertiesContext";
 import PropertyCard from "@/components/PropertyCard";
 import { convertCurrencyToNumber } from "@/utils";
 import useBreakpoint from "@/utils/useBreakpoint";
-import { CrimeURL } from "@/types";
+import { CrimeTypes } from "@/types";
 
 const robotoSerif = Roboto_Serif({ subsets: ["latin"] });
 
@@ -18,7 +18,7 @@ export default function Home() {
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState("");
   const [selectedOrder, setOrderOption] = useState("Ascending");
-  const [crimeTypes, setCrimeTypes] = useState<CrimeURL[]>([]);
+  const [crimeTypes, setCrimeTypes] = useState<CrimeTypes>({});
 
   function handleSelectChange(event: any): void {
     setSelectedOption(event.target.value);
