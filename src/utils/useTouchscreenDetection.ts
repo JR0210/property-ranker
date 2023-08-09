@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-export const useTouchscreenDetection = () => {
+const useTouchscreenDetection = () => {
   const [isTouchscreen, setIsTouchscreen] = useState(false);
 
   useEffect(() => {
@@ -25,3 +25,4 @@ export const useTouchscreenDetection = () => {
   return isTouchscreen;
 };
 
+export default useTouchscreenDetection;

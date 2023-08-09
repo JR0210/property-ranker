@@ -1,9 +1,10 @@
 "use client";
 
-import { forwardRef, useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, forwardRef } from "react";
 import RowInput from "./RowInput";
-import PropertiesContext from "../PropertiesContext";
+import PropertiesContext from "@/utils/PropertiesContext";
 import { validateUrl } from "@/utils";
+import ModalBase from "./ModalBase";
 
 interface AddModalProps {
   modalOpen: boolean;
@@ -41,11 +42,14 @@ export default forwardRef<HTMLDivElement, AddModalProps>(function AddModal(
     if (val === "") newInputValues[index].valid = true;
     else newInputValues[index].valid = validateUrl(newInputValues[index].value);
     setInputValues(newInputValues);
-  };
+  }
 
   function handleAddRow() {
-    setInputValues([...inputValues, { value: "", touched: false, valid: true }]);
-  };
+    setInputValues([
+      ...inputValues,
+      { value: "", touched: false, valid: true },
+    ]);
+  }
 
   function removeRow(index: number) {
     setInputValues(inputValues.filter((_, i) => i !== index));
@@ -57,47 +61,47 @@ export default forwardRef<HTMLDivElement, AddModalProps>(function AddModal(
   }
 
   function handleSubmit() {
-    const validUrls = inputValues.filter((input) => input.value && input.valid).map((input) => input.value);
+    const validUrls = inputValues
+      .filter((input) => input.value && input.valid)
+      .map((input) => input.value);
     setInputValues([{ value: "", touched: false, valid: true }]);
     submit(validUrls);
   }
 
   return (
-    <div className={`modal ${modalOpen && "modal-open"}`}>
-      <div className="modal-box" ref={ref}>
-        <button
-          className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-          onClick={handleCancel}
-        >
-          ✕
-        </button>
-        <h3 className="text-xl font-bold">Add Properties</h3>
-        <ul className="flex flex-col w-full py-4 px-2 gap-4">
-          {inputValues.map((input, index) => (
-            <li className="flex flex-row items-center gap-2" key={index}>
-              <RowInput value={input.value} onChange={(val) => handleInputChange(val, index)} valid={input.valid} />
-              {inputValues.length > 1 && (
-                <button className="btn btn-sm btn-circle btn-ghost" onClick={() => removeRow(index)}>✕</button>
-              )}
-            </li>
-          ))}
-          <li className="flex flex-row items-center gap-2">
-            <button className="btn btn-ghost text-accent" onClick={handleAddRow}>+ Add new row</button>
+    <ModalBase
+      title="Add Properties"
+      modalOpen={modalOpen}
+      setModalOpen={setModalOpen}
+      submit={handleSubmit}
+      cancel={handleCancel}
+      submitDisabled={inputValues.some((input) => !input.valid)}
+      ref={ref}
+    >
+      <ul className="flex flex-col w-full py-4 px-2 gap-4">
+        {inputValues.map((input, index) => (
+          <li className="flex flex-row items-center gap-2" key={index}>
+            <RowInput
+              value={input.value}
+              onChange={(val) => handleInputChange(val, index)}
+              valid={input.valid}
+            />
+            {inputValues.length > 1 && (
+              <button
+                className="btn btn-sm btn-circle btn-ghost"
+                onClick={() => removeRow(index)}
+              >
+                ✕
+              </button>
+            )}
           </li>
-        </ul>
-        <div className="modal-action">
-          <button className="btn" onClick={handleCancel}>
-            Cancel
+        ))}
+        <li className="flex flex-row items-center gap-2">
+          <button className="btn btn-ghost text-accent" onClick={handleAddRow}>
+            + Add new row
           </button>
-          <button
-            className="btn btn-accent"
-            disabled={inputValues.some((input) => !input.valid)}
-            onClick={handleSubmit}
-          >
-            Submit
-          </button>
-        </div>
-      </div>
-    </div>
+        </li>
+      </ul>
+    </ModalBase>
   );
 });

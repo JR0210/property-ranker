@@ -118,3 +118,29 @@ export function convertCurrencyToNumber(currencyString: string): number {
   const numericValue = parseFloat(numericString);
   return numericValue;
 }
+
+export function handlePasteFormatting(
+  clipboardData: DataTransfer
+): string[] | void {
+  const pastedData = clipboardData.getData("Text");
+  const items = pastedData.split("\n").filter((item) => item !== "");
+
+  let urls = [];
+  let error: string | null = null;
+  for (let i = 0; i < items.length; i++) {
+    if (!validateUrl(items[i])) {
+      error = "Pasted data includes invalid URLs";
+      break;
+    }
+    urls[i] = items[i].trim();
+  }
+
+  if (urls.length > 20) error = "Pasted data includes too many URLs";
+  if (urls.length === 0) error = "Pasted data includes no URLs";
+
+  if (error) {
+    return;
+  }
+
+  return urls;
+}

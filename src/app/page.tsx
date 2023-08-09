@@ -3,10 +3,11 @@
 import { useState, useEffect, useMemo } from "react";
 import { Roboto_Serif } from "next/font/google";
 import PropertyAdd from "@/components/PropertyAdd";
-import PropertiesContext from "@/PropertiesContext";
+import PropertiesContext from "@/utils/PropertiesContext";
 import PropertyCard from "@/components/PropertyCard";
 import { convertCurrencyToNumber } from "@/utils";
 import useBreakpoint from "@/utils/useBreakpoint";
+import { CrimeTypes } from "@/types";
 
 const robotoSerif = Roboto_Serif({ subsets: ["latin"] });
 
@@ -17,6 +18,7 @@ export default function Home() {
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState("");
   const [selectedOrder, setOrderOption] = useState("Ascending");
+  const [crimeTypes, setCrimeTypes] = useState<CrimeTypes>({});
 
   function handleSelectChange(event: any): void {
     setSelectedOption(event.target.value);
@@ -25,6 +27,16 @@ export default function Home() {
   function handleOrderChange(event: any): void {
     setOrderOption(event.target.value);
   }
+
+  useEffect(() => {
+    async function fetchCrimeTypes() {
+      const res = await fetch("/api/crime-types");
+      const jsonRes = await res.json();
+      setCrimeTypes(jsonRes.data);
+    }
+
+    fetchCrimeTypes();
+  }, []);
 
   useEffect(() => {
     async function makeAPICall(url: string) {
@@ -52,7 +64,7 @@ export default function Home() {
           }
           return newData;
         });
-        await new Promise((resolve) => setTimeout(resolve, 500)); // Wait for 2 seconds
+        await new Promise((resolve) => setTimeout(resolve, 500)); // Wait for 500 ms
       }
 
       setLoading(false);
@@ -86,7 +98,9 @@ export default function Home() {
             +b.property?.propertyInfo?.bathrooms
           );
         case "Insurance rating area":
-          return a.property?.propertyInfo?.ratingArea?.localeCompare(b.property?.propertyInfo?.ratingArea);
+          return a.property?.propertyInfo?.ratingArea?.localeCompare(
+            b.property?.propertyInfo?.ratingArea
+          );
         case "Crimes":
           return a.crime?.length - b.crime?.length;
         case "Stop & searches":
@@ -101,7 +115,7 @@ export default function Home() {
       }
     });
 
-    return selectedOrder === 'Ascending' ? sortedData : sortedData.reverse();
+    return selectedOrder === "Ascending" ? sortedData : sortedData.reverse();
   }, [propertyData, selectedOption, selectedOrder]);
 
   return (
@@ -111,7 +125,9 @@ export default function Home() {
         <span className={`${robotoSerif.className} text-accent`}>home</span>
       </h1>
 
-      <PropertiesContext.Provider value={{ propertyUrls, setPropertyUrls }}>
+      <PropertiesContext.Provider
+        value={{ propertyUrls, setPropertyUrls, crimeTypes }}
+      >
         <div className="grid grid-cols-3 gap-32">
           <div />
           <PropertyAdd loading={loading} />
@@ -120,8 +136,9 @@ export default function Home() {
               disabled={propertyUrls.length === 0 || loading}
               className="select select-accent disabled:opacity-50"
               onChange={handleSelectChange}
+              defaultValue="Sort by"
             >
-              <option disabled selected hidden>
+              <option disabled hidden>
                 Sort by
               </option>
               <option>Price</option>
