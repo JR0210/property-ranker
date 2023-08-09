@@ -1,4 +1,3 @@
-export interface CrimeURL {
-  url: string;
-  name: string;
+export interface CrimeTypes {
+  [key: string]: string;
 }
