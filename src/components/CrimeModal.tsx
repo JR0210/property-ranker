@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, useContext } from "react";
+import { forwardRef, useContext, useMemo, useState } from "react";
 import PropertiesContext from "@/utils/PropertiesContext";
 import ModalBase from "./ModalBase";
 
@@ -27,11 +27,25 @@ export default forwardRef<HTMLDivElement, CrimeModalProps>(function CrimeModal(
   { modalOpen, setModalOpen, title, data = [], streetName }: CrimeModalProps,
   ref
 ) {
+  const [filter, setFilter] = useState<string>("");
   const { crimeTypes } = useContext(PropertiesContext);
 
   function handleClose() {
     setModalOpen(false);
   }
+
+  function handleFilterChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setFilter(e.target.value);
+  }
+
+  const filteredData = useMemo(() => {
+    if (filter === "" || filter.length < 3) return data;
+    return data.filter((a) =>
+      a.location?.street?.name
+        ?.toLocaleLowerCase()
+        .includes(filter.toLocaleLowerCase())
+    );
+  }, [data, filter]);
 
   return (
     <ModalBase
@@ -39,18 +53,27 @@ export default forwardRef<HTMLDivElement, CrimeModalProps>(function CrimeModal(
       modalOpen={modalOpen}
       setModalOpen={setModalOpen}
       cancel={handleClose}
-      styling="w-3/5 max-w-5xl"
+      styling="w-3/5 max-w-5xl h-3/5 max-h-5xl"
       ref={ref}
     >
-      <div className="flex flex-col py-4 gap-4">
-        <h3 className="font-semibold">
-          Crimes on property road:{" "}
-          {
-            data.filter((c) => c.location.street.name.includes(streetName))
-              .length
-          }
-        </h3>
-        <div className="overflow-x-auto max-h-[33vh] overflow-y-auto">
+      <div className="flex flex-col py-4 gap-4 min-h-0">
+        <div className="flex flex-row justify-between items-center">
+          <h3 className="font-semibold">
+            Crimes on property road:{" "}
+            {
+              data.filter((c) => c.location.street.name.includes(streetName))
+                .length
+            }
+          </h3>
+          <input
+            type="text"
+            placeholder="Filter by location"
+            className="input input-bordered input-accent"
+            value={filter}
+            onChange={handleFilterChange}
+          />
+        </div>
+        <div className="overflow-x-auto max-h-full overflow-y-auto">
           <table className="table table-zebra table-md">
             <thead className="text-neutral dark:text-neutral-content text-base sticky top-0 bg-base-300 bg-opacity-62 z-10">
               <tr>
@@ -61,7 +84,7 @@ export default forwardRef<HTMLDivElement, CrimeModalProps>(function CrimeModal(
             </thead>
 
             <tbody>
-              {data
+              {filteredData
                 .sort((a, b) => a.month.localeCompare(b.month))
                 .map((crime) => (
                   <tr key={crime.id}>
