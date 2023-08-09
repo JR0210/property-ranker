@@ -20,10 +20,11 @@ interface CrimeModalProps {
   setModalOpen: (open: boolean) => void;
   title: string;
   data: Crime[];
+  streetName: string;
 }
 
 export default forwardRef<HTMLDivElement, CrimeModalProps>(function CrimeModal(
-  { modalOpen, setModalOpen, title, data = [] }: CrimeModalProps,
+  { modalOpen, setModalOpen, title, data = [], streetName }: CrimeModalProps,
   ref
 ) {
   const { crimeTypes } = useContext(PropertiesContext);
@@ -41,28 +42,37 @@ export default forwardRef<HTMLDivElement, CrimeModalProps>(function CrimeModal(
       styling="w-3/5 max-w-5xl"
       ref={ref}
     >
-      <div className="overflow-x-auto max-h-[33vh] overflow-y-auto my-4">
-        <table className="table table-zebra table-md">
-          <thead className="text-neutral-content text-base sticky top-0 bg-base-300 bg-opacity-62 z-10">
-            <tr>
-              <th className="rounded-tl-xl">Year/Month</th>
-              <th>Crime</th>
-              <th className="rounded-tr-xl">Location</th>
-            </tr>
-          </thead>
+      <div className="flex flex-col py-4 gap-4">
+        <h3 className="font-semibold">
+          Crimes on property road:{" "}
+          {
+            data.filter((c) => c.location.street.name.includes(streetName))
+              .length
+          }
+        </h3>
+        <div className="overflow-x-auto max-h-[33vh] overflow-y-auto">
+          <table className="table table-zebra table-md">
+            <thead className="text-neutral dark:text-neutral-content text-base sticky top-0 bg-base-300 bg-opacity-62 z-10">
+              <tr>
+                <th className="rounded-tl-xl">Year/Month</th>
+                <th>Crime</th>
+                <th className="rounded-tr-xl">Location</th>
+              </tr>
+            </thead>
 
-          <tbody>
-            {data
-              .sort((a, b) => a.month.localeCompare(b.month))
-              .map((crime) => (
-                <tr key={crime.id}>
-                  <td>{crime.month}</td>
-                  <td>{crimeTypes[crime.category]}</td>
-                  <td>{crime.location?.street?.name}</td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
+            <tbody>
+              {data
+                .sort((a, b) => a.month.localeCompare(b.month))
+                .map((crime) => (
+                  <tr key={crime.id}>
+                    <td>{crime.month}</td>
+                    <td>{crimeTypes[crime.category]}</td>
+                    <td>{crime.location?.street?.name}</td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </ModalBase>
   );
