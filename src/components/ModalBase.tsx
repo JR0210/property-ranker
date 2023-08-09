@@ -44,7 +44,7 @@ export default forwardRef<HTMLDivElement, ModalBaseProps>(function ModalBase(
 
   return (
     <div className={`modal ${modalOpen && "modal-open"}`}>
-      <div className={`modal-box ${styling}`} ref={ref}>
+      <div className={`modal-box flex flex-col ${styling}`} ref={ref}>
         <button
           className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
           onClick={handleClose}
@@ -55,7 +55,7 @@ export default forwardRef<HTMLDivElement, ModalBaseProps>(function ModalBase(
 
         {children}
 
-        <div className="modal-action">
+        <div className="modal-action mt-auto">
           <button
             className={`btn ${!submitExists && "btn-accent"}`}
             onClick={handleClose}

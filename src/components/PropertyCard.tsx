@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useRef, useContext } from "react";
+import { useState, useRef } from "react";
 import CrimeModal from "./CrimeModal";
-import PropertiesContext from "@/utils/PropertiesContext";
+import useCloseModal from "@/utils/useCloseModal";
 
 import Image from "next/image";
 import Skeleton from "./Skeleton";
@@ -27,9 +27,10 @@ export default function PropertyCard({
   skeleton,
   breakpoint,
 }: PropertyCardProps) {
-  const { setPropertyUrls } = useContext(PropertiesContext);
   const modalRef = useRef<HTMLDivElement>(null);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
+
+  useCloseModal(modalOpen, modalRef, setModalOpen);
 
   const {
     property = {},
@@ -109,7 +110,7 @@ export default function PropertyCard({
         {renderAddressLink()}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-2 mt-4">
-          <div className="flex flex-col items-start">
+          <div className="flex flex-col p-4 items-start">
             <CarIcon fill={iconFill} size={24} />
             <span>
               Insurance rating area: <b>{propertyInfo.ratingArea}</b>
@@ -117,7 +118,7 @@ export default function PropertyCard({
           </div>
 
           <div
-            className="flex flex-col items-start cursor-pointer transition-all hover:bg-base-100"
+            className="flex flex-col p-4 rounded-xl items-start cursor-pointer transition-all bg-base-200 hover:bg-base-100"
             onClick={() => setModalOpen(true)}
           >
             <CrimeIcon fill={iconFill} size={24} />
@@ -129,7 +130,7 @@ export default function PropertyCard({
             </span>
           </div>
 
-          <div className="flex flex-col items-start">
+          <div className="flex flex-col p-4 items-start">
             <FoodIcon fill={iconFill} size={24} />
             <span>
               No. of delivery restaurants:{" "}
