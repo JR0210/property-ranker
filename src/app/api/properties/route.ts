@@ -1,5 +1,13 @@
 import { JSDOM } from "jsdom";
 import { getPostcodeRatingArea } from "@/utils";
+import circle from "@turf/circle";
+import { point, Units } from "@turf/helpers";
+
+interface PropertiesPost extends Request {
+  query: {
+    crimeRadius?: string;
+  };
+}
 
 function sanitizeJSONString(jsonString: string): { [key: string]: any } {
   // Remove line breaks and excessive whitespace
@@ -17,10 +25,66 @@ function sanitizeJSONString(jsonString: string): { [key: string]: any } {
   return parsedJSON;
 }
 
-export async function POST(request: Request): Promise<Response> {
+async function fetchCrimeData(
+  lat: number,
+  long: number,
+  radius?: string,
+  date?: string
+) {
+  if (typeof radius === "undefined") {
+    const crimeRes = await fetch(
+      `https://data.police.uk/api/crimes-street/all-crime?lat=${lat}&lng=${long}`
+    );
+    const crimeData = await crimeRes.json();
+
+    const stopSearchRes = await fetch(
+      `https://data.police.uk/api/stops-street?lat=${lat}&lng=${long}`
+    );
+    const stopSearchData = await stopSearchRes.json();
+
+    return {
+      crime: crimeData,
+      stopSearch: stopSearchData,
+    };
+  }
+
+  const center = point([long, lat]);
+  const options = { steps: 64, units: "miles" } as {
+    steps: number;
+    units: Units;
+  };
+
+  const generatedCircle = circle(center, parseFloat(radius), options);
+
+  const swappedCoordinates = generatedCircle.geometry.coordinates[0].map(
+    (coord) => [coord[1], coord[0]]
+  );
+  const polygonString = swappedCoordinates
+    .map((coord) => coord.join(","))
+    .join(":");
+
+  const crimeRes = await fetch(
+    `https://data.police.uk/api/crimes-street/all-crime?poly=${polygonString}`
+  );
+  const crimeData = await crimeRes.json();
+
+  const stopSearchRes = await fetch(
+    `https://data.police.uk/api/stops-street?poly=${polygonString}`
+  );
+  const stopSearchData = await stopSearchRes.json();
+
+  return {
+    crime: crimeData,
+    stopSearch: stopSearchData,
+  };
+}
+
+export async function POST(request: PropertiesPost): Promise<Response> {
   try {
     // Retrieve the array of URLs from the request body
     const { url }: { url: string } = await request.json();
+    // Check if query param for radius is present
+    const radius = request.query["crimeRadius"];
 
     // Validate that all URLs contain "rightmove.co.uk"
     const urlValid = url.includes("rightmove.co.uk");
@@ -78,7 +142,7 @@ export async function POST(request: Request): Promise<Response> {
           longitude: location.longitude,
         },
         deliveryPointId: address.deliveryPointId,
-        mapsLocation: `https://google.com/maps/search/${address.outcode}+${address.incode}`
+        mapsLocation: `https://google.com/maps/search/${address.outcode}+${address.incode}`,
       },
       displayImage: images[0]?.url,
       broadband: `https://www.broadbandchoices.co.uk/packages/new-grid/default?location=${address.outcode}+${address.incode}#/?sortBy=Speed`,
@@ -89,7 +153,7 @@ export async function POST(request: Request): Promise<Response> {
         price: prices.primaryPrice,
         similarProperties: propertyUrls.similarPropertiesUrl,
         soldNearBy: propertyUrls.nearbySoldPropertiesUrl,
-        ratingArea: getPostcodeRatingArea(address.outcode)
+        ratingArea: getPostcodeRatingArea(address.outcode),
       },
       listingUpdate: listingHistory?.listingUpdateReason,
       councilTax: livingCosts?.councilTaxBand,
@@ -103,19 +167,24 @@ export async function POST(request: Request): Promise<Response> {
     const crimeRes = await fetch(
       `https://data.police.uk/api/crimes-street/all-crime?lat=${location.latitude}&lng=${location.longitude}`
     );
-    const crimeData = await crimeRes.json();
-    
+    // const crimeData = await crimeRes.json();
+
     const stopSearchRes = await fetch(
       `https://data.police.uk/api/stops-street?lat=${location.latitude}&lng=${location.longitude}`
     );
     const stopSearchData = await stopSearchRes.json();
 
+    const crimeData = await fetchCrimeData(
+      location.latitude,
+      location.longitude,
+      radius
+    );
+
     const finalPropertyDetails = {
       url,
       property: rightMoveDetails,
       restaurants: justeatRestaurants,
-      crime: crimeData,
-      stopSearch: stopSearchData,
+      ...crimeData,
     };
 
     // Return a success response
@@ -137,3 +206,24 @@ export async function POST(request: Request): Promise<Response> {
     );
   }
 }
+
+// export async function PATCH(request: Request): Promise<Response> {
+//   // Retrieve the URL to update from the request body
+//   const { property, key, value }: { property: any, key: string, value: string } = await request.json();
+//   switch (key) {
+//     case "crime":
+//       const crimeRes = await fetch(
+//         `https://data.police.uk/api/crimes-street/all-crime?lat=${property.address.location.latitude}&lng=${property.address.location.longitude}`
+//       );
+//       const stopSearchRes = await fetch(
+//         `https://data.police.uk/api/stops-street?lat=${property.address.location.latitude}&lng=${property.address.location.longitude}`
+//       );
+//       const crimeData = await crimeRes.json();
+//       property.crime = crimeData;
+//       break;
+//   // Return a success response
+//   return new Response(
+//     JSON.stringify({ message: "Success" }),
+//     { status: 200 }
+//   );
+// }
