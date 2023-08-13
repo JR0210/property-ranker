@@ -2,6 +2,7 @@ import { JSDOM } from "jsdom";
 import { getPostcodeRatingArea } from "@/utils";
 import circle from "@turf/circle";
 import { point, Units } from "@turf/helpers";
+import { parse } from "url";
 
 interface PropertiesPost extends Request {
   query: {
@@ -79,12 +80,13 @@ async function fetchCrimeData(
   };
 }
 
-export async function POST(request: PropertiesPost): Promise<Response> {
+export async function POST(request: Request): Promise<Response> {
   try {
     // Retrieve the array of URLs from the request body
     const { url }: { url: string } = await request.json();
     // Check if query param for radius is present
-    const radius = request.query["crimeRadius"];
+    const { query } = parse(request.url || "", true);
+    const { crimeRadius: radius } = query as { crimeRadius?: string };
 
     // Validate that all URLs contain "rightmove.co.uk"
     const urlValid = url.includes("rightmove.co.uk");
@@ -164,21 +166,9 @@ export async function POST(request: PropertiesPost): Promise<Response> {
     );
     const justeatRestaurants = await justeatRes.json();
 
-    const crimeRes = await fetch(
-      `https://data.police.uk/api/crimes-street/all-crime?lat=${location.latitude}&lng=${location.longitude}`
-    );
-    // const crimeData = await crimeRes.json();
-
-    const stopSearchRes = await fetch(
-      `https://data.police.uk/api/stops-street?lat=${location.latitude}&lng=${location.longitude}`
-    );
-    const stopSearchData = await stopSearchRes.json();
-
-    const crimeData = await fetchCrimeData(
-      location.latitude,
-      location.longitude,
-      radius
-    );
+    const crimeData =
+      (await fetchCrimeData(location.latitude, location.longitude, radius)) ||
+      {};
 
     const finalPropertyDetails = {
       url,
