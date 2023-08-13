@@ -40,7 +40,8 @@ export default function Home() {
 
   useEffect(() => {
     async function makeAPICall(url: string) {
-      const res = await fetch("/api/properties", {
+      const query = new URLSearchParams({ crimeRadius: "0.5" });
+      const res = await fetch("/api/properties?" + query, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -128,7 +129,7 @@ export default function Home() {
       <PropertiesContext.Provider
         value={{ propertyUrls, setPropertyUrls, crimeTypes }}
       >
-        <div className="grid grid-cols-3 gap-32">
+        <div className="grid grid-cols-3 gap-8 ">
           <div />
           <PropertyAdd loading={loading} />
           <div className="flex flex-row h-fit self-end gap-4">
@@ -158,6 +159,20 @@ export default function Home() {
             >
               <option>Ascending</option>
               <option>Descending</option>
+            </select>
+
+            <select
+              className="select select-accent ml-4 disabled:opacity-50"
+              disabled={loading}
+              defaultValue="Crime Radius"
+            >
+              <option disabled hidden>
+                Crime Radius
+              </option>
+              <option>1/4 Mile</option>
+              <option>1/2 Mile</option>
+              <option>3/4 Mile</option>
+              <option>1 Mile</option>
             </select>
           </div>
         </div>
