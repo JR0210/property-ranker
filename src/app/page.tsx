@@ -40,7 +40,8 @@ export default function Home() {
 
   useEffect(() => {
     async function makeAPICall(url: string) {
-      const res = await fetch("/api/properties", {
+      const query = new URLSearchParams({ crimeRadius: "0.5" });
+      const res = await fetch("/api/properties?" + query, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
