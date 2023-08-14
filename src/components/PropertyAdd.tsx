@@ -48,7 +48,7 @@ export default function PropertyAdd({ loading }: { loading: boolean }) {
         ref={modalRef}
       />
 
-      <button className="fixed z-30 btn btn-accent btn-square shadow-lg top-4 left-4 lg:top-8 lg:left-8">
+      <button className="flex lg:hidden fixed z-30 btn btn-accent btn-square shadow-lg top-4 left-4 lg:top-8 lg:left-8">
         <svg
           width="24px"
           height="24px"
