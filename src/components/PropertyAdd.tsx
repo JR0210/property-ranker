@@ -73,7 +73,7 @@ export default function PropertyAdd({ loading }: { loading: boolean }) {
             &nbsp;+&nbsp;
             <kbd className="kbd w-fit lg:w-16">V</kbd>
             <div
-              className="mb-auto ml-2 tooltip tooltip-right absolute -right-6 top-0"
+              className="mb-auto ml-2 tooltip tooltip-bottom lg:tooltip-right absolute -right-6 top-0"
               data-tip="Expects a CSV (comma separated list) of Rightmove URLs"
             >
               <FontAwesomeIcon icon={faQuestionCircle} />
@@ -84,7 +84,7 @@ export default function PropertyAdd({ loading }: { loading: boolean }) {
             <div className="flex items-center text-sm md:text-lg w-fit relative">
               <button className="btn">Paste</button>
               <div
-                className="mb-auto ml-2 tooltip tooltip-bottom absolute -right-6 top-0"
+                className="mb-auto ml-2 tooltip tooltip-bottom lg:tooltip-right absolute -right-6 top-0"
                 data-tip="Expects a CSV (comma separated list) of Rightmove URLs"
               >
                 <FontAwesomeIcon icon={faQuestionCircle} />

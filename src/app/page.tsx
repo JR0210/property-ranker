@@ -129,10 +129,10 @@ export default function Home() {
       <PropertiesContext.Provider
         value={{ propertyUrls, setPropertyUrls, crimeTypes }}
       >
-        <div className="grid grid-cols-3 gap-8 ">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 ">
           <div />
           <PropertyAdd loading={loading} />
-          <div className="flex flex-col h-fit self-end gap-4">
+          <div className="hidden lg:flex flex-col h-fit self-end gap-4">
             <select
               className="select select-accent w-fit disabled:opacity-50"
               disabled={loading}
