@@ -19,6 +19,7 @@ export default function Home() {
   const [selectedOption, setSelectedOption] = useState("");
   const [selectedOrder, setOrderOption] = useState("Ascending");
   const [crimeTypes, setCrimeTypes] = useState<CrimeTypes>({});
+  const [burgerOpen, setBurgerOpen] = useState<boolean>(false);
 
   function handleSelectChange(event: any): void {
     setSelectedOption(event.target.value);
@@ -120,78 +121,105 @@ export default function Home() {
   }, [propertyData, selectedOption, selectedOrder]);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-start py-4 px-8 lg:py-10 lg:px-24 gap-8">
-      <h1 className="text-2xl lg:text-4xl 2xl:text-6xl font-bold tracking-tight text-center">
-        Compare your next{" "}
-        <span className={`${robotoSerif.className} text-accent`}>home</span>
-      </h1>
-
-      <PropertiesContext.Provider
-        value={{ propertyUrls, setPropertyUrls, crimeTypes }}
+    <>
+      <button
+        className="flex lg:hidden fixed z-30 btn btn-accent btn-square shadow-lg top-4 left-4 lg:top-8 lg:left-8"
+        onClick={() => setBurgerOpen((prevState) => !prevState)}
       >
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 ">
-          <div />
-          <PropertyAdd loading={loading} />
-          <div className="hidden lg:flex flex-col h-fit self-end gap-4">
-            <select
-              className="select select-accent w-fit disabled:opacity-50"
-              disabled={loading}
-              defaultValue="Crime Radius"
-            >
-              <option disabled hidden>
-                Crime Radius
-              </option>
-              <option value="0.25">1/4 Mile</option>
-              <option value="0.5">1/2 Mile</option>
-              <option value="0.75">3/4 Mile</option>
-              <option value="1">1 Mile</option>
-            </select>
+        <svg
+          width="24px"
+          height="24px"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="#fff"
+        >
+          <path d="M0 0h24v24H0z" fill="none" />
+          <path
+            d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"
+            fill="currentColor"
+          />
+        </svg>
+      </button>
+      <div
+        className={`${
+          burgerOpen ? "translate-x-0" : "-translate-x-full"
+        } transition-all gap-4 text-center items-center bg-accent text-white absolute h-screen w-screen z-20`}
+      >
+        Sort Sort order Crime radius
+      </div>
+      <main className="flex min-h-screen flex-col items-center justify-start py-4 px-8 lg:py-10 lg:px-24 gap-8">
+        <h1 className="text-2xl lg:text-4xl 2xl:text-6xl font-bold tracking-tight text-center">
+          Compare your next{" "}
+          <span className={`${robotoSerif.className} text-accent`}>home</span>
+        </h1>
 
-            <div className="flex flex-row gap-4">
+        <PropertiesContext.Provider
+          value={{ propertyUrls, setPropertyUrls, crimeTypes }}
+        >
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 ">
+            <div />
+            <PropertyAdd loading={loading} />
+            <div className="hidden lg:flex flex-col h-fit self-end gap-4">
               <select
-                disabled={propertyUrls.length === 0 || loading}
-                className="select select-accent disabled:opacity-50"
-                onChange={handleSelectChange}
-                defaultValue="Sort by"
+                className="select select-accent w-fit disabled:opacity-50"
+                disabled={loading}
+                defaultValue="Crime Radius"
               >
                 <option disabled hidden>
-                  Sort by
+                  Crime Radius
                 </option>
-                <option>Price</option>
-                <option>Bedrooms</option>
-                <option>Bathrooms</option>
-                <option>Insurance rating area</option>
-                <option>Crimes</option>
-                <option>Stop & searches</option>
-                <option>Restaurants</option>
+                <option value="0.25">1/4 Mile</option>
+                <option value="0.5">1/2 Mile</option>
+                <option value="0.75">3/4 Mile</option>
+                <option value="1">1 Mile</option>
               </select>
-              <select
-                className="select select-accent disabled:opacity-50"
-                disabled={
-                  (propertyUrls.length === 0 || loading) && !selectedOption
-                }
-                onChange={handleOrderChange}
-              >
-                <option>Ascending</option>
-                <option>Descending</option>
-              </select>
+
+              <div className="flex flex-row gap-4">
+                <select
+                  disabled={propertyUrls.length === 0 || loading}
+                  className="select select-accent disabled:opacity-50"
+                  onChange={handleSelectChange}
+                  defaultValue="Sort by"
+                >
+                  <option disabled hidden>
+                    Sort by
+                  </option>
+                  <option>Price</option>
+                  <option>Bedrooms</option>
+                  <option>Bathrooms</option>
+                  <option>Insurance rating area</option>
+                  <option>Crimes</option>
+                  <option>Stop & searches</option>
+                  <option>Restaurants</option>
+                </select>
+                <select
+                  className="select select-accent disabled:opacity-50"
+                  disabled={
+                    (propertyUrls.length === 0 || loading) && !selectedOption
+                  }
+                  onChange={handleOrderChange}
+                >
+                  <option>Ascending</option>
+                  <option>Descending</option>
+                </select>
+              </div>
             </div>
           </div>
-        </div>
 
-        {propertyData.length > 0 && (
-          <div className="w-full grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4">
-            {sortedPropertyData.map((property: any, index: number) => (
-              <PropertyCard
-                key={index}
-                propertyData={property}
-                skeleton={property.loading}
-                breakpoint={breakpoint}
-              />
-            ))}
-          </div>
-        )}
-      </PropertiesContext.Provider>
-    </main>
+          {propertyData.length > 0 && (
+            <div className="w-full grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4">
+              {sortedPropertyData.map((property: any, index: number) => (
+                <PropertyCard
+                  key={index}
+                  propertyData={property}
+                  skeleton={property.loading}
+                  breakpoint={breakpoint}
+                />
+              ))}
+            </div>
+          )}
+        </PropertiesContext.Provider>
+      </main>
+    </>
   );
 }
