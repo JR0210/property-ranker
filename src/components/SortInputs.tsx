@@ -1,11 +1,18 @@
+interface SortInputsProps {
+  loading: boolean;
+  propertyUrls: string[];
+  handleSelectChange: (event: any) => void;
+  selectedOption: string;
+  handleOrderChange: (event: any) => void;
+}
+
 export default function SortInputs({
   loading,
   propertyUrls,
   handleSelectChange,
   selectedOption,
   handleOrderChange,
-  selectedOrder,
-}) {
+}: SortInputsProps) {
   return (
     <div className="hidden lg:flex flex-col h-fit self-end gap-4">
       <select
