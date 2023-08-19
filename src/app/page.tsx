@@ -5,7 +5,7 @@ import { Roboto_Serif } from "next/font/google";
 import PropertyAdd from "@/components/PropertyAdd";
 import PropertiesContext from "@/utils/PropertiesContext";
 import PropertyCard from "@/components/PropertyCard";
-import { convertCurrencyToNumber } from "@/utils";
+import { handleSort } from "@/utils";
 import useBreakpoint from "@/utils/useBreakpoint";
 import { CrimeTypes } from "@/types";
 import SortInputs from "@/components/SortInputs";
@@ -83,40 +83,7 @@ export default function Home() {
     if (!selectedOption) return propertyData;
 
     const sortedData = [...propertyData];
-    sortedData.sort((a: any, b: any): any => {
-      switch (selectedOption) {
-        case "Price":
-          return (
-            convertCurrencyToNumber(a.property?.propertyInfo?.price) -
-            convertCurrencyToNumber(b.property?.propertyInfo?.price)
-          );
-        case "Bedrooms":
-          return (
-            +a.property?.propertyInfo?.bedrooms -
-            +b.property?.propertyInfo?.bedrooms
-          );
-        case "Bathrooms":
-          return (
-            +a.property?.propertyInfo?.bathrooms -
-            +b.property?.propertyInfo?.bathrooms
-          );
-        case "Insurance rating area":
-          return a.property?.propertyInfo?.ratingArea?.localeCompare(
-            b.property?.propertyInfo?.ratingArea
-          );
-        case "Crimes":
-          return a.crime?.length - b.crime?.length;
-        case "Stop & searches":
-          return a.stopSearch?.length - b.stopSearch?.length;
-        case "Restaurants":
-          return (
-            a.restaurants?.Restaurants?.length -
-            b.restaurants?.Restaurants?.length
-          );
-        default:
-          return 0;
-      }
-    });
+    sortedData.sort((a: any, b: any): any => handleSort(a, b, selectedOption));
 
     return selectedOrder === "Ascending" ? sortedData : sortedData.reverse();
   }, [propertyData, selectedOption, selectedOrder]);
