@@ -127,26 +127,49 @@ export default function Home() {
         className="flex lg:hidden fixed z-30 btn btn-accent btn-square shadow-lg top-4 left-4 lg:top-8 lg:left-8"
         onClick={() => setBurgerOpen((prevState) => !prevState)}
       >
-        <svg
-          width="24px"
-          height="24px"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="#fff"
-        >
-          <path d="M0 0h24v24H0z" fill="none" />
-          <path
-            d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"
+        {burgerOpen ? (
+          <svg
+            className="w-6 h-6"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
             fill="currentColor"
-          />
-        </svg>
+            stroke="currentColor"
+          >
+            <path
+              fillRule="evenodd"
+              d="M3.707 16.707a1 1 0 010-1.414L8.586 10 3.707 5.121a1 1 0 111.414-1.414L10 8.586l4.879-4.879a1 1 0 111.414 1.414L11.414 10l4.879 4.879a1 1 0 11-1.414 1.414L10 11.414l-4.879 4.879a1 1 0 01-1.414 0z"
+              clipRule="evenodd"
+            />
+          </svg>
+        ) : (
+          <svg
+            width="24px"
+            height="24px"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="#fff"
+          >
+            <path d="M0 0h24v24H0z" fill="none" />
+            <path
+              d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"
+              fill="currentColor"
+            />
+          </svg>
+        )}
       </button>
       <div
         className={`${
           burgerOpen ? "translate-x-0" : "-translate-x-full"
-        } transition-all gap-4 text-center items-center bg-accent text-white absolute h-screen w-screen z-20`}
+        } transition-all gap-4 text-center items-center bg-base-100 absolute h-screen w-screen z-20`}
       >
-        Sort Sort order Crime radius
+        <SortInputs
+          loading={loading}
+          propertyUrls={propertyUrls}
+          handleSelectChange={handleSelectChange}
+          selectedOption={selectedOption}
+          handleOrderChange={handleOrderChange}
+          type="burger"
+        />
       </div>
       <main className="flex min-h-screen flex-col items-center justify-start py-4 px-8 lg:py-10 lg:px-24 gap-8">
         <h1 className="text-2xl lg:text-4xl 2xl:text-6xl font-bold tracking-tight text-center">
