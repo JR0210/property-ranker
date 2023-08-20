@@ -4,6 +4,7 @@ interface SortInputsProps {
   handleSelectChange: (event: any) => void;
   selectedOption: string;
   handleOrderChange: (event: any) => void;
+  handleRadiusChange: (event: any) => void;
   type?: string;
 }
 
@@ -13,6 +14,7 @@ export default function SortInputs({
   handleSelectChange,
   selectedOption,
   handleOrderChange,
+  handleRadiusChange,
   type,
 }: SortInputsProps) {
   if (type === "burger") {
@@ -21,6 +23,7 @@ export default function SortInputs({
         <select
           className="select select-accent disabled:opacity-50"
           disabled={loading}
+          onChange={handleRadiusChange}
           defaultValue="Crime Radius"
         >
           <option disabled hidden>
@@ -64,6 +67,7 @@ export default function SortInputs({
       <select
         className="select select-accent w-fit disabled:opacity-50"
         disabled={loading}
+        onChange={handleRadiusChange}
         defaultValue="Crime Radius"
       >
         <option disabled hidden>
