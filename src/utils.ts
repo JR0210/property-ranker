@@ -144,3 +144,41 @@ export function handlePasteFormatting(
 
   return urls;
 }
+
+export function handleSort(
+  a: any,
+  b: any,
+  selectedOption: string | undefined
+): number {
+  switch (selectedOption) {
+    case "Price":
+      return (
+        convertCurrencyToNumber(a.property?.propertyInfo?.price) -
+        convertCurrencyToNumber(b.property?.propertyInfo?.price)
+      );
+    case "Bedrooms":
+      return (
+        +a.property?.propertyInfo?.bedrooms -
+        +b.property?.propertyInfo?.bedrooms
+      );
+    case "Bathrooms":
+      return (
+        +a.property?.propertyInfo?.bathrooms -
+        +b.property?.propertyInfo?.bathrooms
+      );
+    case "Insurance rating area":
+      return a.property?.propertyInfo?.ratingArea?.localeCompare(
+        b.property?.propertyInfo?.ratingArea
+      );
+    case "Crimes":
+      return a.crime?.length - b.crime?.length;
+    case "Stop & searches":
+      return a.stopSearch?.length - b.stopSearch?.length;
+    case "Restaurants":
+      return (
+        a.restaurants?.Restaurants?.length - b.restaurants?.Restaurants?.length
+      );
+    default:
+      return 0;
+  }
+}

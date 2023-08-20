@@ -5,9 +5,10 @@ import { Roboto_Serif } from "next/font/google";
 import PropertyAdd from "@/components/PropertyAdd";
 import PropertiesContext from "@/utils/PropertiesContext";
 import PropertyCard from "@/components/PropertyCard";
-import { convertCurrencyToNumber } from "@/utils";
+import { handleSort } from "@/utils";
 import useBreakpoint from "@/utils/useBreakpoint";
 import { CrimeTypes } from "@/types";
+import SortInputs from "@/components/SortInputs";
 
 const robotoSerif = Roboto_Serif({ subsets: ["latin"] });
 
@@ -19,6 +20,7 @@ export default function Home() {
   const [selectedOption, setSelectedOption] = useState("");
   const [selectedOrder, setOrderOption] = useState("Ascending");
   const [crimeTypes, setCrimeTypes] = useState<CrimeTypes>({});
+  const [burgerOpen, setBurgerOpen] = useState<boolean>(false);
 
   function handleSelectChange(event: any): void {
     setSelectedOption(event.target.value);
@@ -81,115 +83,96 @@ export default function Home() {
     if (!selectedOption) return propertyData;
 
     const sortedData = [...propertyData];
-    sortedData.sort((a: any, b: any): any => {
-      switch (selectedOption) {
-        case "Price":
-          return (
-            convertCurrencyToNumber(a.property?.propertyInfo?.price) -
-            convertCurrencyToNumber(b.property?.propertyInfo?.price)
-          );
-        case "Bedrooms":
-          return (
-            +a.property?.propertyInfo?.bedrooms -
-            +b.property?.propertyInfo?.bedrooms
-          );
-        case "Bathrooms":
-          return (
-            +a.property?.propertyInfo?.bathrooms -
-            +b.property?.propertyInfo?.bathrooms
-          );
-        case "Insurance rating area":
-          return a.property?.propertyInfo?.ratingArea?.localeCompare(
-            b.property?.propertyInfo?.ratingArea
-          );
-        case "Crimes":
-          return a.crime?.length - b.crime?.length;
-        case "Stop & searches":
-          return a.stopSearch?.length - b.stopSearch?.length;
-        case "Restaurants":
-          return (
-            a.restaurants?.Restaurants?.length -
-            b.restaurants?.Restaurants?.length
-          );
-        default:
-          return 0;
-      }
-    });
+    sortedData.sort((a: any, b: any): any => handleSort(a, b, selectedOption));
 
     return selectedOrder === "Ascending" ? sortedData : sortedData.reverse();
   }, [propertyData, selectedOption, selectedOrder]);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-start py-4 px-8 lg:py-10 lg:px-24 gap-8">
-      <h1 className="text-2xl lg:text-4xl 2xl:text-6xl font-bold tracking-tight text-center">
-        Compare your next{" "}
-        <span className={`${robotoSerif.className} text-accent`}>home</span>
-      </h1>
-
-      <PropertiesContext.Provider
-        value={{ propertyUrls, setPropertyUrls, crimeTypes }}
+    <>
+      <button
+        className="flex lg:hidden fixed z-30 btn btn-accent btn-square shadow-lg top-4 left-4 lg:top-8 lg:left-8"
+        onClick={() => setBurgerOpen((prevState) => !prevState)}
       >
-        <div className="grid grid-cols-3 gap-8 ">
-          <div />
-          <PropertyAdd loading={loading} />
-          <div className="flex flex-row h-fit self-end gap-4">
-            <select
-              disabled={propertyUrls.length === 0 || loading}
-              className="select select-accent disabled:opacity-50"
-              onChange={handleSelectChange}
-              defaultValue="Sort by"
-            >
-              <option disabled hidden>
-                Sort by
-              </option>
-              <option>Price</option>
-              <option>Bedrooms</option>
-              <option>Bathrooms</option>
-              <option>Insurance rating area</option>
-              <option>Crimes</option>
-              <option>Stop & searches</option>
-              <option>Restaurants</option>
-            </select>
-            <select
-              className="select select-accent disabled:opacity-50"
-              disabled={
-                (propertyUrls.length === 0 || loading) && !selectedOption
-              }
-              onChange={handleOrderChange}
-            >
-              <option>Ascending</option>
-              <option>Descending</option>
-            </select>
-
-            <select
-              className="select select-accent ml-4 disabled:opacity-50"
-              disabled={loading}
-              defaultValue="Crime Radius"
-            >
-              <option disabled hidden>
-                Crime Radius
-              </option>
-              <option>1/4 Mile</option>
-              <option>1/2 Mile</option>
-              <option>3/4 Mile</option>
-              <option>1 Mile</option>
-            </select>
-          </div>
-        </div>
-
-        {propertyData.length > 0 && (
-          <div className="w-full grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4">
-            {sortedPropertyData.map((property: any, index: number) => (
-              <PropertyCard
-                key={index}
-                propertyData={property}
-                skeleton={property.loading}
-                breakpoint={breakpoint}
-              />
-            ))}
-          </div>
+        {burgerOpen ? (
+          <svg
+            className="w-6 h-6"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            stroke="currentColor"
+          >
+            <path
+              fillRule="evenodd"
+              d="M3.707 16.707a1 1 0 010-1.414L8.586 10 3.707 5.121a1 1 0 111.414-1.414L10 8.586l4.879-4.879a1 1 0 111.414 1.414L11.414 10l4.879 4.879a1 1 0 11-1.414 1.414L10 11.414l-4.879 4.879a1 1 0 01-1.414 0z"
+              clipRule="evenodd"
+            />
+          </svg>
+        ) : (
+          <svg
+            width="24px"
+            height="24px"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="#fff"
+          >
+            <path d="M0 0h24v24H0z" fill="none" />
+            <path
+              d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"
+              fill="currentColor"
+            />
+          </svg>
         )}
-      </PropertiesContext.Provider>
-    </main>
+      </button>
+      <div
+        className={`${
+          burgerOpen ? "translate-x-0" : "-translate-x-full"
+        } transition-all gap-4 text-center items-center bg-base-100 absolute h-screen w-screen z-20`}
+      >
+        <SortInputs
+          loading={loading}
+          propertyUrls={propertyUrls}
+          handleSelectChange={handleSelectChange}
+          selectedOption={selectedOption}
+          handleOrderChange={handleOrderChange}
+          type="burger"
+        />
+      </div>
+      <main className="flex min-h-screen flex-col items-center justify-start py-4 px-8 lg:py-10 lg:px-24 gap-8">
+        <h1 className="text-2xl lg:text-4xl 2xl:text-6xl font-bold tracking-tight text-center">
+          Compare your next{" "}
+          <span className={`${robotoSerif.className} text-accent`}>home</span>
+        </h1>
+
+        <PropertiesContext.Provider
+          value={{ propertyUrls, setPropertyUrls, crimeTypes }}
+        >
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 ">
+            <div />
+            <PropertyAdd loading={loading} />
+            <SortInputs
+              loading={loading}
+              propertyUrls={propertyUrls}
+              handleSelectChange={handleSelectChange}
+              selectedOption={selectedOption}
+              handleOrderChange={handleOrderChange}
+            />
+          </div>
+
+          {propertyData.length > 0 && (
+            <div className="w-full grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4">
+              {sortedPropertyData.map((property: any, index: number) => (
+                <PropertyCard
+                  key={index}
+                  propertyData={property}
+                  skeleton={property.loading}
+                  breakpoint={breakpoint}
+                />
+              ))}
+            </div>
+          )}
+        </PropertiesContext.Provider>
+      </main>
+    </>
   );
 }

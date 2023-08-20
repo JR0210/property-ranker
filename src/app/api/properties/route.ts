@@ -32,7 +32,7 @@ async function fetchCrimeData(
   radius?: string,
   date?: string
 ) {
-  if (typeof radius === "undefined") {
+  if (typeof radius === "undefined" || radius === "1") {
     const crimeRes = await fetch(
       `https://data.police.uk/api/crimes-street/all-crime?lat=${lat}&lng=${long}`
     );
@@ -197,23 +197,32 @@ export async function POST(request: Request): Promise<Response> {
   }
 }
 
-// export async function PATCH(request: Request): Promise<Response> {
-//   // Retrieve the URL to update from the request body
-//   const { property, key, value }: { property: any, key: string, value: string } = await request.json();
-//   switch (key) {
-//     case "crime":
-//       const crimeRes = await fetch(
-//         `https://data.police.uk/api/crimes-street/all-crime?lat=${property.address.location.latitude}&lng=${property.address.location.longitude}`
-//       );
-//       const stopSearchRes = await fetch(
-//         `https://data.police.uk/api/stops-street?lat=${property.address.location.latitude}&lng=${property.address.location.longitude}`
-//       );
-//       const crimeData = await crimeRes.json();
-//       property.crime = crimeData;
-//       break;
-//   // Return a success response
-//   return new Response(
-//     JSON.stringify({ message: "Success" }),
-//     { status: 200 }
-//   );
-// }
+export async function PATCH(request: Request): Promise<Response> {
+  // Retrieve the URL to update from the request body
+  const {
+    property,
+    key,
+    value,
+  }: { property: any; key: string; value: string } = await request.json();
+  let updatedProperty = property;
+  switch (key) {
+    case "crime":
+      const crimeData = await fetchCrimeData(
+        property?.property?.address?.location?.latitude,
+        property?.property?.address?.location?.longitude,
+        value
+      );
+      updatedProperty = {
+        ...property,
+        crimeData,
+      };
+      break;
+  }
+
+  return new Response(
+    JSON.stringify({ message: "Success", data: updatedProperty }),
+    {
+      status: 200,
+    }
+  );
+}
