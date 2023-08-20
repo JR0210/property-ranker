@@ -22,6 +22,23 @@ export default function Home() {
   const [crimeTypes, setCrimeTypes] = useState<CrimeTypes>({});
   const [burgerOpen, setBurgerOpen] = useState<boolean>(false);
 
+  async function patchProperty(property: any, key: string, value: string) {
+    const res = await fetch("/api/properties", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ property, key, value }),
+    });
+    const jsonRes = await res.json();
+
+    if (jsonRes.error) {
+      console.error(jsonRes.error);
+    }
+
+    return jsonRes.data;
+  }
+
   function handleSelectChange(event: any): void {
     setSelectedOption(event.target.value);
   }
@@ -88,6 +105,31 @@ export default function Home() {
     return selectedOrder === "Ascending" ? sortedData : sortedData.reverse();
   }, [propertyData, selectedOption, selectedOrder]);
 
+  async function handleCrimeRadiusChange(event: any): Promise<any> {
+    setLoading(true);
+    const newRadius = event.target.value;
+
+    // Set all properties to loading
+    setPropertyData((prevData) =>
+      [...prevData].map((item) => ({ ...item, loading: true }))
+    );
+
+    // Async call to update crime radius for all properties
+    for (let i = 0; i < propertyData.length; i++) {
+      const data = await patchProperty(propertyData[i], "crime", newRadius);
+      setPropertyData((prevData) => {
+        const newData = [...prevData];
+        const dataIndex = newData.findIndex((item) => item.url === data.url);
+        if (dataIndex !== -1) {
+          newData[dataIndex] = { ...data, loading: false };
+        }
+        return newData;
+      });
+    }
+
+    setLoading(false);
+  }
+
   return (
     <>
       <button
@@ -135,6 +177,7 @@ export default function Home() {
           handleSelectChange={handleSelectChange}
           selectedOption={selectedOption}
           handleOrderChange={handleOrderChange}
+          handleRadiusChange={handleCrimeRadiusChange}
           type="burger"
         />
       </div>
@@ -156,6 +199,7 @@ export default function Home() {
               handleSelectChange={handleSelectChange}
               selectedOption={selectedOption}
               handleOrderChange={handleOrderChange}
+              handleRadiusChange={handleCrimeRadiusChange}
             />
           </div>
 
