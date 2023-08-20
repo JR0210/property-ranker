@@ -75,6 +75,7 @@ export function validateUrl(value: string) {
 }
 
 export function removePostcode(str: string): string {
+  if (!str) return "";
   const pattern = /,\s*[A-Z]{1,2}\d{1,2}(?:\s*\d\w{2})?/;
   const result = str.replace(pattern, "");
   return result.trim();

@@ -214,7 +214,7 @@ export async function PATCH(request: Request): Promise<Response> {
       );
       updatedProperty = {
         ...property,
-        crimeData,
+        ...crimeData,
       };
       break;
   }
