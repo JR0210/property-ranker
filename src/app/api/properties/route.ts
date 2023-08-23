@@ -1,14 +1,8 @@
-import { JSDOM } from "jsdom";
+import { parse as nodeParser } from "node-html-parser";
 import { getPostcodeRatingArea } from "@/utils";
 import circle from "@turf/circle";
 import { point, Units } from "@turf/helpers";
 import { parse } from "url";
-
-interface PropertiesPost extends Request {
-  query: {
-    crimeRadius?: string;
-  };
-}
 
 function sanitizeJSONString(jsonString: string): { [key: string]: any } {
   // Remove line breaks and excessive whitespace
@@ -99,20 +93,21 @@ export async function POST(request: Request): Promise<Response> {
     const html = await response.text();
 
     // Parse the HTML
-    const dom = new JSDOM(html);
-    const { document } = dom.window;
+    const root = nodeParser(html);
+
+    if (root === null || typeof root === "undefined") {
+      throw new Error("Unable to parse the HTML.");
+    }
 
     // Retrieve the property details by finding the script tag containing window.PAGE_MODEL =
-    const scripts = Array.from(
-      document.querySelectorAll("script")
-    ) as HTMLScriptElement[];
+    const scripts = Array.from(root.querySelectorAll("script"));
     const script = scripts.find((script) =>
       script.textContent?.includes("window.PAGE_MODEL =")
     );
+
     if (!script) {
       throw new Error("Unable to find the property details.");
     }
-
     const propertyDetailsString = script.textContent?.replace(
       "window.PAGE_MODEL = ",
       ""
