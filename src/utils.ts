@@ -188,3 +188,13 @@ export function generateURLsFromIds(ids: string[]): string[] {
   const baseURL = "https://www.rightmove.co.uk/properties/";
   return ids.map((id) => `${baseURL}${id}`);
 }
+
+export function extractPropertyIdsFromURL(urls: string[]): string[] {
+  let ids = [];
+  for (let i = 0; i < urls.length; i++) {
+    const url = urls[i];
+    const matches = url.match(/properties\/(\d+)/);
+    if (matches) ids.push(matches[1]);
+  }
+  return ids;
+}
