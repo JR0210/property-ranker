@@ -198,3 +198,13 @@ export function extractPropertyIdsFromURL(urls: string[]): string[] {
   }
   return ids;
 }
+
+export function setWindowParams(urls: string[]): void {
+  const ids = extractPropertyIdsFromURL(urls);
+  const queryParams = new URLSearchParams();
+  queryParams.append("ids", ids.join(",")); // Convert the array to a comma-separated string
+
+  const newURL = `${window.location.pathname}?${queryParams.toString()}`;
+
+  window.history.pushState({ path: newURL }, "", newURL);
+}
