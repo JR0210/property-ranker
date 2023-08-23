@@ -183,3 +183,8 @@ export function handleSort(
       return 0;
   }
 }
+
+export function generateURLsFromIds(ids: string[]): string[] {
+  const baseURL = "https://www.rightmove.co.uk/properties/";
+  return ids.map((id) => `${baseURL}${id}`);
+}
