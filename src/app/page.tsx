@@ -5,7 +5,7 @@ import { Roboto_Serif } from "next/font/google";
 import PropertyAdd from "@/components/PropertyAdd";
 import PropertiesContext from "@/utils/PropertiesContext";
 import PropertyCard from "@/components/PropertyCard";
-import { handleSort } from "@/utils";
+import { handleSort, generateURLsFromIds } from "@/utils";
 import useBreakpoint from "@/utils/useBreakpoint";
 import { CrimeTypes } from "@/types";
 import SortInputs from "@/components/SortInputs";
@@ -61,7 +61,17 @@ export default function Home() {
       setCrimeTypes(jsonRes.data);
     }
 
+    function setSharedProperties() {
+      const queryParams = new URLSearchParams(window.location.search);
+      const propertyIds = queryParams.getAll("ids");
+      if (!propertyIds.length) return;
+
+      const propertyUrls = generateURLsFromIds(propertyIds);
+      setPropertyUrls(propertyUrls);
+    }
+
     fetchCrimeTypes();
+    setSharedProperties();
   }, []);
 
   useEffect(() => {
