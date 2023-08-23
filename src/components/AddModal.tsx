@@ -3,7 +3,7 @@
 import { useEffect, useState, useContext, forwardRef } from "react";
 import RowInput from "./RowInput";
 import PropertiesContext from "@/utils/PropertiesContext";
-import { validateUrl } from "@/utils";
+import { validateUrl, setWindowParams } from "@/utils";
 import ModalBase from "./ModalBase";
 
 interface AddModalProps {
@@ -66,6 +66,7 @@ export default forwardRef<HTMLDivElement, AddModalProps>(function AddModal(
       .map((input) => input.value);
     setInputValues([{ value: "", touched: false, valid: true }]);
     submit(validUrls);
+    setWindowParams(validUrls);
   }
 
   return (
