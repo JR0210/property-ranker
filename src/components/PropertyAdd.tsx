@@ -7,7 +7,7 @@ import { faQuestionCircle } from "@fortawesome/free-regular-svg-icons";
 
 import AddModal from "./AddModal";
 import PropertiesContext from "@/utils/PropertiesContext";
-import { handlePasteFormatting } from "@/utils";
+import { handlePasteFormatting, setWindowParams } from "@/utils";
 import useClipboardPaste from "@/utils/useClipboardPaste";
 import useCloseModal from "@/utils/useCloseModal";
 
@@ -34,6 +34,7 @@ export default function PropertyAdd({ loading }: { loading: boolean }) {
     if (!urls) return;
 
     setPropertyUrls(urls);
+    setWindowParams(urls);
   }
 
   useClipboardPaste(handlePaste);

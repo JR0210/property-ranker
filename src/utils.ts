@@ -183,3 +183,28 @@ export function handleSort(
       return 0;
   }
 }
+
+export function generateURLsFromIds(ids: string[]): string[] {
+  const baseURL = "https://www.rightmove.co.uk/properties/";
+  return ids.map((id) => `${baseURL}${id}`);
+}
+
+export function extractPropertyIdsFromURL(urls: string[]): string[] {
+  let ids = [];
+  for (let i = 0; i < urls.length; i++) {
+    const url = urls[i];
+    const matches = url.match(/properties\/(\d+)/);
+    if (matches) ids.push(matches[1]);
+  }
+  return ids;
+}
+
+export function setWindowParams(urls: string[]): void {
+  const ids = extractPropertyIdsFromURL(urls);
+  const queryParams = new URLSearchParams();
+  queryParams.append("ids", ids.join(",")); // Convert the array to a comma-separated string
+
+  const newURL = `${window.location.pathname}?${queryParams.toString()}`;
+
+  window.history.pushState({ path: newURL }, "", newURL);
+}
