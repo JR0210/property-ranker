@@ -63,10 +63,14 @@ export default function Home() {
 
     function setSharedProperties() {
       const queryParams = new URLSearchParams(window.location.search);
-      const propertyIds = queryParams.getAll("ids");
-      if (!propertyIds.length) return;
 
-      const propertyUrls = generateURLsFromIds(propertyIds);
+      if (!queryParams.has("ids")) return;
+      const propertyIds = queryParams.get("ids");
+      const propertyIdsArr = propertyIds?.split(",");
+
+      if (!propertyIdsArr) return;
+
+      const propertyUrls = generateURLsFromIds(propertyIdsArr);
       setPropertyUrls(propertyUrls);
     }
 
