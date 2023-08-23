@@ -195,29 +195,26 @@ export async function POST(request: Request): Promise<Response> {
 export async function PATCH(request: Request): Promise<Response> {
   // Retrieve the URL to update from the request body
   const {
-    property,
+    propertyProps,
     key,
     value,
-  }: { property: any; key: string; value: string } = await request.json();
-  let updatedProperty = property;
+  }: { propertyProps: any; key: string; value: string } = await request.json();
+  let data;
   switch (key) {
     case "crime":
+      if (!propertyProps?.latitude || !propertyProps?.longitude) {
+        throw new Error("Latitude and longitude are required.");
+      }
       const crimeData = await fetchCrimeData(
-        property?.property?.address?.location?.latitude,
-        property?.property?.address?.location?.longitude,
+        propertyProps?.latitude,
+        propertyProps?.longitude,
         value
       );
-      updatedProperty = {
-        ...property,
-        ...crimeData,
-      };
+      data = crimeData;
       break;
   }
 
-  return new Response(
-    JSON.stringify({ message: "Success", data: updatedProperty }),
-    {
-      status: 200,
-    }
-  );
+  return new Response(JSON.stringify({ message: "Success", data }), {
+    status: 200,
+  });
 }

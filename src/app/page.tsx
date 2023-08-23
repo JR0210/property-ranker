@@ -23,12 +23,19 @@ export default function Home() {
   const [burgerOpen, setBurgerOpen] = useState<boolean>(false);
 
   async function patchProperty(property: any, key: string, value: string) {
+    let propertyProps;
+    if (key === "crime")
+      propertyProps = {
+        latitude: property.property?.address?.location?.latitude,
+        longitude: property.property?.address?.location?.longitude,
+      };
+
     const res = await fetch("/api/properties", {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ property, key, value }),
+      body: JSON.stringify({ propertyProps, key, value }),
     });
     const jsonRes = await res.json();
 
@@ -119,10 +126,12 @@ export default function Home() {
       const data = await patchProperty(propertyData[i], "crime", newRadius);
       setPropertyData((prevData) => {
         const newData = [...prevData];
-        const dataIndex = newData.findIndex((item) => item.url === data.url);
-        if (dataIndex !== -1) {
-          newData[dataIndex] = { ...data, loading: false };
-        }
+        newData[i] = {
+          ...newData[i],
+          ...data,
+          loading: false,
+        };
+
         return newData;
       });
     }
