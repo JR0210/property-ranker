@@ -7,7 +7,7 @@ import { faQuestionCircle } from "@fortawesome/free-regular-svg-icons";
 
 import AddModal from "./AddModal";
 import PropertiesContext from "@/utils/PropertiesContext";
-import { handlePasteFormatting } from "@/utils";
+import { handlePasteFormatting, extractPropertyIdsFromURL } from "@/utils";
 import useClipboardPaste from "@/utils/useClipboardPaste";
 import useCloseModal from "@/utils/useCloseModal";
 
@@ -34,6 +34,13 @@ export default function PropertyAdd({ loading }: { loading: boolean }) {
     if (!urls) return;
 
     setPropertyUrls(urls);
+    const ids = extractPropertyIdsFromURL(urls);
+    const queryParams = new URLSearchParams();
+    queryParams.append("ids", ids.join(",")); // Convert the array to a comma-separated string
+
+    const newURL = `${window.location.pathname}?${queryParams.toString()}`;
+
+    window.history.pushState({ path: newURL }, "", newURL);
   }
 
   useClipboardPaste(handlePaste);
