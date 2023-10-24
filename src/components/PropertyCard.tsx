@@ -42,7 +42,8 @@ export default function PropertyCard({
   const { displayImage = "", address = {}, propertyInfo = {} } = property;
   const PropertyIcon = getPropertyTypeIcon(propertyInfo.propertyType);
   const iconSize = breakpoint === "sm" ? 24 : 32;
-  const modalTitle = `${address.postcode?.outcode} ${address.postcode?.incode} Crime`;
+  const fullPostcode = `${address.postcode?.outcode} ${address.postcode?.incode}`;
+  const modalTitle = `${fullPostcode} Crime`;
 
   const renderPropertyInfoTop = () => (
     <div className="flex flex-row flex-start gap-4 mb-2">
@@ -85,8 +86,7 @@ export default function PropertyCard({
           classNames="min-w-[16px] md:min-w-[24px]"
         />
         <h2 className="card-title text-lg md:text-xl">
-          {removePostcode(address.road)}, {address.postcode?.outcode}{" "}
-          {address.postcode?.incode}
+          {removePostcode(address.road)}, {fullPostcode}
         </h2>
       </a>
       <h3 className="text-xl leading-5 font-semibold">{propertyInfo.price}</h3>
@@ -137,13 +137,26 @@ export default function PropertyCard({
               <b>{(restaurants.Restaurants || []).length}</b>
             </span>
           </div>
-          <a
-            className="w-fit text-accent hover:text-accent-focus md:col-span-2"
-            href={property.broadband}
-            target="_blank"
-          >
-            View broadband options
-          </a>
+          {fullPostcode && (
+            <a
+              className="w-fit text-accent hover:text-accent-focus md:col-span-2"
+              href={`https://find-energy-certificate.service.gov.uk/find-a-certificate/search-by-postcode?postcode=${encodeURIComponent(
+                fullPostcode
+              )}`}
+              target="_blank"
+            >
+              View EPC ratings
+            </a>
+          )}
+          {property.broadband && (
+            <a
+              className="w-fit text-accent hover:text-accent-focus md:col-span-2"
+              href={property.broadband}
+              target="_blank"
+            >
+              View broadband options
+            </a>
+          )}
         </div>
       </>
     );
