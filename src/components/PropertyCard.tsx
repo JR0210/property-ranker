@@ -137,6 +137,13 @@ export default function PropertyCard({
               <b>{(restaurants.Restaurants || []).length}</b>
             </span>
           </div>
+          <a
+            className="w-fit text-accent hover:text-accent-focus md:col-span-2"
+            href={"#"}
+            target="_blank"
+          >
+            View EPC ratings
+          </a>
           {property.broadband && (
             <a
               className="w-fit text-accent hover:text-accent-focus md:col-span-2"
