@@ -140,7 +140,9 @@ export default function PropertyCard({
           {fullPostcode && (
             <a
               className="w-fit text-accent hover:text-accent-focus md:col-span-2"
-              href={"#"}
+              href={`https://find-energy-certificate.service.gov.uk/find-a-certificate/search-by-postcode?postcode=${encodeURIComponent(
+                fullPostcode
+              )}`}
               target="_blank"
             >
               View EPC ratings
