@@ -99,6 +99,7 @@ export default function Home() {
         const data = await makeAPICall(propertyUrls[i]);
         setPropertyData((prevData) => {
           const newData = [...prevData];
+          if (!data || !data.url) return newData;
           const dataIndex = newData.findIndex((item) => item.url === data.url);
           if (dataIndex !== -1) {
             newData[dataIndex] = data;
