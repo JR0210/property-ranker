@@ -8,7 +8,6 @@ function sanitizeJSONString(jsonString: string): { [key: string]: any } {
   // Remove line breaks and excessive whitespace
   const trimmedString = jsonString.replace(/\s{2,}/g, " ").trim();
 
-  // Parse the trimmed string to validate the JSON
   let parsedJSON: any;
   try {
     parsedJSON = JSON.parse(trimmedString);
@@ -108,12 +107,25 @@ export async function POST(request: Request): Promise<Response> {
     if (!script) {
       throw new Error("Unable to find the property details.");
     }
-    const propertyDetailsString = script.textContent?.replace(
-      "window.PAGE_MODEL = ",
-      ""
-    );
 
-    const sanitizedJson = sanitizeJSONString(propertyDetailsString || "");
+    // Get the JSON object containing the property details, rightmove added more
+    // objects to the script tag so we need to extract only PAGE_MODEL
+    let scriptContent = script.textContent;
+    let startIndex =
+      scriptContent.indexOf("window.PAGE_MODEL") + "window.PAGE_MODEL".length;
+    let objectStartIndex = scriptContent.indexOf("{", startIndex);
+    let nextObjectIndex = scriptContent.indexOf("window.", objectStartIndex);
+
+    let pageModelObject = scriptContent
+      .substring(objectStartIndex, nextObjectIndex)
+      .trim();
+
+    // Remove trailing comma if it exists
+    if (pageModelObject.endsWith(",")) {
+      pageModelObject = pageModelObject.slice(0, -1);
+    }
+
+    const sanitizedJson = sanitizeJSONString(pageModelObject || "");
 
     // Retrieve the property details
     const { propertyData } = sanitizedJson;
