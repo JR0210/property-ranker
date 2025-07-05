@@ -73,6 +73,67 @@ async function fetchCrimeData(
   };
 }
 
+function extractPageModelObject(scriptContent: string): string {
+  const pageModelStart = scriptContent.indexOf("window.PAGE_MODEL");
+  if (pageModelStart === -1) {
+    throw new Error("window.PAGE_MODEL not found in script");
+  }
+
+  const equalsIndex = scriptContent.indexOf("=", pageModelStart);
+  if (equalsIndex === -1) {
+    throw new Error("Assignment operator not found for window.PAGE_MODEL");
+  }
+
+  const objectStart = scriptContent.indexOf("{", equalsIndex);
+  if (objectStart === -1) {
+    throw new Error("Opening brace not found for window.PAGE_MODEL object");
+  }
+
+  let braceCount = 0;
+  let inString = false;
+  let escapeNext = false;
+  let stringChar = '';
+  
+  for (let i = objectStart; i < scriptContent.length; i++) {
+    const char = scriptContent[i];
+    
+    if (escapeNext) {
+      escapeNext = false;
+      continue;
+    }
+    
+    if (char === '\\') {
+      escapeNext = true;
+      continue;
+    }
+    
+    if (!inString && (char === '"' || char === "'")) {
+      inString = true;
+      stringChar = char;
+      continue;
+    }
+    
+    if (inString && char === stringChar) {
+      inString = false;
+      stringChar = '';
+      continue;
+    }
+    
+    if (!inString) {
+      if (char === '{') {
+        braceCount++;
+      } else if (char === '}') {
+        braceCount--;
+        if (braceCount === 0) {
+          return scriptContent.substring(objectStart, i + 1);
+        }
+      }
+    }
+  }
+  
+  throw new Error("Matching closing brace not found for window.PAGE_MODEL object");
+}
+
 export async function POST(request: Request): Promise<Response> {
   try {
     // Retrieve the array of URLs from the request body
@@ -111,19 +172,8 @@ export async function POST(request: Request): Promise<Response> {
     // Get the JSON object containing the property details, rightmove added more
     // objects to the script tag so we need to extract only PAGE_MODEL
     let scriptContent = script.textContent;
-    let startIndex =
-      scriptContent.indexOf("window.PAGE_MODEL") + "window.PAGE_MODEL".length;
-    let objectStartIndex = scriptContent.indexOf("{", startIndex);
-    let nextObjectIndex = scriptContent.indexOf("window.", objectStartIndex);
 
-    let pageModelObject = scriptContent
-      .substring(objectStartIndex, nextObjectIndex)
-      .trim();
-
-    // Remove trailing comma if it exists
-    if (pageModelObject.endsWith(",")) {
-      pageModelObject = pageModelObject.slice(0, -1);
-    }
+    let pageModelObject = extractPageModelObject(scriptContent);
 
     const sanitizedJson = sanitizeJSONString(pageModelObject || "");
 
